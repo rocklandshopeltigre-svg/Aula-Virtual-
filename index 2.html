@@ -1,0 +1,391 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Infografía dinámica: Educación Física, Salud y Antropometría</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=DM+Sans:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --ink:#0b1f4d; --paper:#f6f8fd; --lime:#f7c600; --orange:#d62839; --teal:#1d5fd1;
+    --sky:#e3ecff; --sand:#fff6d6; --muted:#9fb0d4; --line:#22335e; --bg:#070f26; --card:#12224a; --text:#e8edf8;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{font-family:'DM Sans',system-ui,sans-serif;background:var(--bg);color:var(--text);line-height:1.5}
+  h1,h2,h3,.big{font-family:'Archivo Black',sans-serif;font-weight:400;letter-spacing:-.01em}
+  .wrap{max-width:860px;margin:0 auto;padding:0 18px}
+
+  /* HERO */
+  header{background:linear-gradient(160deg,#0f2a66,#070f26);color:#fff;padding:34px 0 40px;position:relative;overflow:hidden}
+  header .tag{display:inline-block;background:var(--lime);color:var(--ink);font-weight:700;font-size:12px;
+    padding:4px 10px;border-radius:99px;text-transform:uppercase;letter-spacing:.06em}
+  header h1{font-size:clamp(30px,7vw,54px);line-height:1.02;margin:14px 0 12px}
+  header h1 span{color:var(--lime)}
+  header p{color:#c9cfdc;max-width:560px}
+  .meta{margin-top:18px;font-size:13px;color:#9aa3b8;display:flex;flex-wrap:wrap;gap:6px 18px}
+  .runner{position:absolute;right:-20px;bottom:-10px;width:200px;opacity:.16}
+
+  /* STAT BAND */
+  .stat{background:var(--orange);color:#fff;padding:26px 0}
+  .stat .wrap{display:grid;grid-template-columns:auto 1fr;gap:18px;align-items:center}
+  .stat .big{font-size:clamp(56px,14vw,96px);line-height:.9}
+  .people{display:flex;flex-wrap:wrap;gap:4px;margin-top:8px}
+  .people i{width:14px;height:22px;border-radius:7px 7px 3px 3px;background:rgba(255,255,255,.35)}
+  .people i.on{background:#fff}
+  .stat small{display:block;opacity:.85;font-size:12px;margin-top:6px}
+
+  /* NAV CHIPS */
+  nav{position:sticky;top:0;z-index:5;background:rgba(7,15,38,.94);backdrop-filter:blur(6px);border-bottom:1px solid var(--line)}
+  nav .wrap{display:flex;gap:6px;overflow-x:auto;padding:10px 18px;scrollbar-width:none}
+  nav a{flex:none;text-decoration:none;color:var(--text);font-size:13px;font-weight:700;border:2px solid var(--text);
+    border-radius:99px;padding:5px 12px}
+  nav a:hover{background:var(--lime);border-color:var(--lime);color:var(--ink)}
+
+  section{padding:34px 0 10px}
+  .eyebrow{font-size:12px;font-weight:700;color:#6ea0ff;text-transform:uppercase;letter-spacing:.08em}
+  section h2{font-size:clamp(24px,5vw,34px);margin:4px 0 14px;line-height:1.1}
+
+  /* CARDS */
+  .cards{display:grid;gap:12px}
+  .card{background:var(--card);border:2px solid var(--line);border-radius:16px;overflow:hidden;box-shadow:4px 4px 0 var(--teal);transition:transform .15s}
+  .card:hover{transform:translate(-1px,-1px)}
+  .card button{all:unset;cursor:pointer;display:grid;grid-template-columns:52px 1fr 28px;align-items:center;gap:12px;
+    width:100%;padding:14px 16px;box-sizing:border-box}
+  .num{color:var(--ink);width:52px;height:52px;border-radius:12px;display:grid;place-items:center;font-family:'Archivo Black';font-size:22px;background:var(--lime)}
+  .card:nth-child(3n+2) .num{background:var(--orange);color:#fff}
+  .card:nth-child(3n) .num{background:var(--teal);color:#fff}
+  .card h3{font-size:17px;line-height:1.2}
+  .card .hint{font-size:13px;color:var(--muted)}
+  .plus{font-size:26px;font-weight:700;transition:transform .2s;text-align:center}
+  .card.open .plus{transform:rotate(45deg)}
+  .body{max-height:0;overflow:hidden;transition:max-height .35s ease}
+  .body .in{padding:0 16px 18px 80px}
+  .body p{margin-bottom:10px}
+  .body ul{padding-left:18px;margin-bottom:10px}
+  .body li{margin-bottom:4px}
+  @media(max-width:560px){.body .in{padding:0 16px 18px}}
+
+  .pill-row{display:flex;flex-wrap:wrap;gap:6px;margin:6px 0 10px}
+  .pill{color:var(--ink);background:var(--sky);border-radius:99px;padding:4px 10px;font-size:13px;font-weight:700}
+  .pill.o{background:var(--sand)}
+
+  /* LAW TIMELINE */
+  .tl{position:relative;padding-left:22px;margin:4px 0 6px}
+  .tl:before{content:"";position:absolute;left:6px;top:4px;bottom:4px;width:3px;background:var(--text);border-radius:2px}
+  .tl div{position:relative;margin-bottom:12px}
+  .tl div:before{content:"";position:absolute;left:-21px;top:5px;width:13px;height:13px;border-radius:50%;background:var(--lime);border:3px solid var(--bg)}
+  .tl b{font-family:'Archivo Black';font-weight:400;color:var(--lime)}
+
+  /* WHO minutes */
+  .mins{display:grid;gap:8px;margin:8px 0 12px}
+  .bar{display:grid;grid-template-columns:110px 1fr;gap:10px;align-items:center;font-size:13px;font-weight:700}
+  .track{background:#24345c;border-radius:99px;height:22px;overflow:hidden}
+  .fill{height:100%;border-radius:99px;display:flex;align-items:center;justify-content:flex-end;padding-right:8px;color:#fff;font-size:12px;width:0;transition:width 1s ease}
+
+  /* health triangle */
+  .tri{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin:8px 0 12px}
+  .tri div{color:var(--ink);border-radius:12px;padding:12px 8px;text-align:center;font-size:13px}
+  .tri b{display:block;font-family:'Archivo Black';font-weight:400;font-size:15px}
+
+  /* TOOLS */
+  .tools{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+  @media(max-width:700px){.tools{grid-template-columns:1fr}}
+  .tool{background:var(--card);border:2px solid var(--line);color:#fff;border-radius:18px;padding:18px}
+  .tool h3{font-size:20px;margin-bottom:4px}
+  .tool p.s{color:#b6bdcd;font-size:13px;margin-bottom:12px}
+  .field{display:flex;flex-direction:column;gap:4px;margin-bottom:10px;font-size:13px;font-weight:700}
+  .field input{font:inherit;font-size:18px;padding:10px 12px;border-radius:10px;border:none;background:#fff;color:var(--ink);width:100%}
+  .row2{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+  .seg{display:flex;gap:6px;margin-bottom:10px}
+  .seg button{flex:1;font:inherit;font-weight:700;font-size:14px;padding:8px;border-radius:10px;border:2px solid #fff;background:transparent;color:#fff;cursor:pointer}
+  .seg button.on{background:#fff;color:var(--ink)}
+  .result{margin-top:6px;background:rgba(255,255,255,.08);border-radius:12px;padding:12px}
+  .result .val{font-family:'Archivo Black';font-size:38px;line-height:1}
+  .result .lab{font-weight:700;margin-top:4px}
+  .gauge{position:relative;height:14px;border-radius:99px;margin:14px 0 4px;
+    background:linear-gradient(90deg,#8ab4f8 0 17%,#2fb36d 17% 50%,var(--lime) 50% 75%,var(--orange) 75% 100%)}
+  .gauge .needle{position:absolute;top:-6px;width:6px;height:26px;background:#fff;border-radius:3px;left:0;transform:translateX(-3px);transition:left .4s ease;box-shadow:0 0 0 2px var(--ink)}
+  .gl{display:flex;justify-content:space-between;font-size:11px;color:#b6bdcd}
+
+  /* QUIZ */
+  .quiz{background:var(--card);border:2px solid var(--line);border-radius:18px;padding:18px}
+  .quiz .q{font-weight:700;font-size:17px;margin-bottom:10px}
+  .opts{display:grid;gap:8px}
+  .opts button{font:inherit;text-align:left;padding:10px 12px;border-radius:10px;border:2px solid var(--line);background:#fff;color:var(--ink);cursor:pointer;font-size:15px}
+  .opts button.ok{background:#8fe0b0}
+  .opts button.no{background:#ffb3bb}
+  .fb{margin-top:10px;font-size:14px;min-height:20px}
+  .qnav{display:flex;justify-content:space-between;align-items:center;margin-top:10px;font-size:13px;font-weight:700}
+  .qnav button{font:inherit;font-weight:700;background:var(--lime);color:var(--ink);border:none;border-radius:10px;padding:8px 14px;cursor:pointer}
+
+  footer{margin-top:34px;background:#040a1c;border-top:1px solid var(--line);color:#b6bdcd;font-size:13px;padding:22px 0 30px}
+  footer a{color:var(--lime)}
+  footer b{color:#fff}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="wrap">
+    <span class="tag">Infografía dinámica · Recreando la Patria</span>
+    <h1>Muévete por tu <span>salud</span></h1>
+    <p>Educación Física, salud, sedentarismo y antropometría en 9 claves. Toca cada tarjeta para abrirla y usa las calculadoras para evaluarte.</p>
+    <div class="meta">
+      <span>UPTAA "Pedro Camejo" · PNFI</span>
+      <span>Docente: Ing. Kendy Serrano</span>
+      <span>Estudiante: Renniel Jesús Amundaray Maestre</span>
+      <span>04/11/2026</span>
+    </div>
+  </div>
+  <svg class="runner" viewBox="0 0 100 100" fill="#fff" aria-hidden="true"><circle cx="62" cy="14" r="9"/><path d="M50 26l16 4 10 16-8 3-7-11-6 14 12 12-4 26h-9l3-21-12-10-8 18-20 4-1-8 15-4 14-34-8 2-6 11-7-3 8-15z"/></svg>
+</header>
+
+<div class="stat">
+  <div class="wrap">
+    <div class="big">31%</div>
+    <div>
+      <b>de los adultos del mundo (≈1.800 millones) no hace la actividad física recomendada.</b>
+      <div class="people" id="people" aria-hidden="true"></div>
+      <small>Fuente: OMS / OPS, datos de 2022 publicados en 2024. Cada figura = 1 de cada 16 adultos.</small>
+    </div>
+  </div>
+</div>
+
+<nav><div class="wrap">
+  <a href="#claves">9 claves</a><a href="#imc">Calculadora IMC</a><a href="#icc">Cintura-cadera</a><a href="#reto">Pon a prueba</a>
+</div></nav>
+
+<main class="wrap">
+
+<section id="claves">
+  <div class="eyebrow">Contenido</div>
+  <h2>Las 9 claves</h2>
+  <div class="cards">
+
+    <div class="card"><button aria-expanded="false"><span class="num">1</span><span><h3>¿Qué es la Educación Física?</h3><span class="hint">Formar a la persona a través del movimiento</span></span><span class="plus">+</span></button>
+      <div class="body"><div class="in">
+        <p>Es la disciplina pedagógica que usa el movimiento para formar a la persona de manera integral: física, mental, social y afectiva.</p>
+        <div class="pill-row"><span class="pill">Actividad física: todo movimiento</span><span class="pill o">Ejercicio: planificado</span><span class="pill">Deporte: con reglas</span></div>
+        <p>Trabaja capacidades físicas (fuerza, resistencia, velocidad, flexibilidad), habilidades motrices, juego, recreación y hábitos saludables.</p>
+      </div></div></div>
+
+    <div class="card"><button aria-expanded="false"><span class="num">2</span><span><h3>Legislación nacional</h3><span class="hint">Un derecho garantizado por la ley</span></span><span class="plus">+</span></button>
+      <div class="body"><div class="in">
+        <div class="tl">
+          <div><b>1999</b> · <strong>Constitución (art. 111)</strong>: derecho al deporte y la recreación; Educación Física obligatoria hasta el ciclo diversificado.</div>
+          <div><b>2007</b> · <strong>LOPNNA (art. 63)</strong>: derecho de niños y adolescentes a la recreación, el deporte y el juego.</div>
+          <div><b>2009</b> · <strong>Ley Orgánica de Educación</strong>: la Educación Física forma parte de la formación integral.</div>
+          <div><b>2011</b> · <strong>Ley Orgánica de Deporte, Actividad Física y Educación Física</strong> (G.O. 39.741): utilidad pública, interés social y lucha contra el sedentarismo.</div>
+        </div>
+      </div></div></div>
+
+    <div class="card"><button aria-expanded="false"><span class="num">3</span><span><h3>¿Qué es la salud?</h3><span class="hint">Mucho más que no estar enfermo</span></span><span class="plus">+</span></button>
+      <div class="body"><div class="in">
+        <p>Para la OMS, la salud es un estado de completo bienestar físico, mental y social, y no solo la ausencia de enfermedad.</p>
+        <div class="tri">
+          <div style="background:var(--sky)"><b>Física</b>Cuerpo que funciona bien</div>
+          <div style="background:var(--sand)"><b>Mental</b>Equilibrio emocional</div>
+          <div style="background:#ffe3e6"><b>Social</b>Relaciones sanas</div>
+        </div>
+      </div></div></div>
+
+    <div class="card"><button aria-expanded="false"><span class="num">4</span><span><h3>El sedentarismo</h3><span class="hint">La amenaza silenciosa</span></span><span class="plus">+</span></button>
+      <div class="body"><div class="in">
+        <p>Estilo de vida con muy poco movimiento: muchas horas sentado y sin alcanzar el mínimo de actividad física.</p>
+        <p><strong>Causas:</strong> pantallas, trabajo de escritorio, transporte motorizado, falta de espacios.</p>
+        <p><strong>Riesgos:</strong> enfermedades del corazón, diabetes tipo 2, obesidad, hipertensión, algunos cánceres, ansiedad y depresión.</p>
+        <div class="pill-row"><span class="pill o">Mujeres inactivas: 34 %</span><span class="pill">Hombres inactivos: 29 %</span></div>
+      </div></div></div>
+
+    <div class="card"><button aria-expanded="false"><span class="num">5</span><span><h3>¿Por qué hacer actividad física?</h3><span class="hint">Lo que recomienda la OMS</span></span><span class="plus">+</span></button>
+      <div class="body"><div class="in">
+        <p>Minutos mínimos recomendados para adultos:</p>
+        <div class="mins">
+          <div class="bar">Moderada<div class="track"><div class="fill" data-w="100" style="background:var(--teal)">150 min/sem</div></div></div>
+          <div class="bar">Intensa<div class="track"><div class="fill" data-w="50" style="background:var(--orange)">75 min/sem</div></div></div>
+          <div class="bar">Niños y jóvenes<div class="track"><div class="fill" data-w="100" style="background:#2fb36d">60 min/día</div></div></div>
+        </div>
+        <p>Más fuerza muscular 2 días por semana. Beneficios: corazón sano, mejor control del azúcar, huesos fuertes, menos estrés y mejor sueño.</p>
+      </div></div></div>
+
+    <div class="card"><button aria-expanded="false"><span class="num">6</span><span><h3>Objetivos de la actividad física</h3><span class="hint">Para qué nos movemos</span></span><span class="plus">+</span></button>
+      <div class="body"><div class="in">
+        <ul>
+          <li>Mejorar y mantener la salud</li>
+          <li>Desarrollar fuerza, resistencia, velocidad y flexibilidad</li>
+          <li>Mejorar coordinación y equilibrio</li>
+          <li>Controlar el peso corporal</li>
+          <li>Favorecer el bienestar mental y la autoestima</li>
+          <li>Socializar y aprender valores (respeto, disciplina)</li>
+          <li>Crear hábitos saludables para toda la vida</li>
+        </ul>
+      </div></div></div>
+
+    <div class="card"><button aria-expanded="false"><span class="num">7</span><span><h3>Descenso de peso y salud</h3><span class="hint">Despacio y constante</span></span><span class="plus">+</span></button>
+      <div class="body"><div class="in">
+        <p>Ritmo seguro: <strong>0,5 a 1 kg por semana</strong>. Se logra gastando más energía de la que se consume.</p>
+        <div class="tri">
+          <div style="background:var(--sky)"><b>Comer</b>Equilibrado, menos azúcar</div>
+          <div style="background:var(--sand)"><b>Moverse</b>Aeróbico + fuerza</div>
+          <div style="background:#ffe3e6"><b>Descansar</b>Dormir bien</div>
+        </div>
+        <p>Evita dietas extremas y productos "milagro": causan pérdida de músculo y efecto rebote. Ante dudas, consulta a un médico o nutricionista.</p>
+      </div></div></div>
+
+    <div class="card"><button aria-expanded="false"><span class="num">8</span><span><h3>Antropometría</h3><span class="hint">Medir el cuerpo humano</span></span><span class="plus">+</span></button>
+      <div class="body"><div class="in">
+        <p>Ciencia que estudia las medidas y proporciones del cuerpo. Sirve para conocer la composición corporal, vigilar el crecimiento y detectar riesgos.</p>
+        <div class="pill-row">
+          <span class="pill">Peso → balanza</span><span class="pill o">Talla → tallímetro</span>
+          <span class="pill">Circunferencias → cinta métrica</span><span class="pill o">Pliegues → plicómetro</span>
+          <span class="pill">Diámetros → paquímetro</span>
+        </div>
+        <p>Las mediciones siguen protocolos estandarizados, como los de ISAK.</p>
+      </div></div></div>
+
+    <div class="card"><button aria-expanded="false"><span class="num">9</span><span><h3>Evaluación antropométrica</h3><span class="hint">De las medidas a los resultados</span></span><span class="plus">+</span></button>
+      <div class="body"><div class="in">
+        <ul>
+          <li>Preparar: ropa ligera, sin zapatos.</li>
+          <li>Medir peso, talla, cintura y cadera (y pliegues si hay plicómetro).</li>
+          <li>Calcular índices: <strong>IMC</strong> = peso ÷ talla² · <strong>ICC</strong> = cintura ÷ cadera.</li>
+          <li>Comparar con tablas de referencia de la OMS.</li>
+        </ul>
+        <p>👇 Pruébalo tú mismo con las calculadoras de abajo.</p>
+      </div></div></div>
+
+  </div>
+</section>
+
+<section>
+  <div class="eyebrow">Evalúate</div>
+  <h2>Calculadoras antropométricas</h2>
+  <div class="tools">
+    <div class="tool" id="imc">
+      <h3>Índice de Masa Corporal</h3>
+      <p class="s">Clasificación OMS para adultos.</p>
+      <div class="row2">
+        <label class="field">Peso (kg)<input id="peso" type="number" inputmode="decimal" value="70" min="20" max="300"></label>
+        <label class="field">Talla (cm)<input id="talla" type="number" inputmode="decimal" value="170" min="100" max="230"></label>
+      </div>
+      <div class="result">
+        <div class="val" id="imcVal">–</div>
+        <div class="lab" id="imcLab">–</div>
+        <div class="gauge"><div class="needle" id="needle"></div></div>
+        <div class="gl"><span>15</span><span>18,5</span><span>25</span><span>30</span><span>40</span></div>
+      </div>
+    </div>
+
+    <div class="tool" id="icc" style="background:var(--teal)">
+      <h3>Índice cintura-cadera</h3>
+      <p class="s" style="color:#dbe6ff">Indicador de riesgo cardiovascular (OMS).</p>
+      <div class="seg" id="sexo"><button class="on" data-s="h">Hombre</button><button data-s="m">Mujer</button></div>
+      <div class="row2">
+        <label class="field">Cintura (cm)<input id="cintura" type="number" inputmode="decimal" value="85"></label>
+        <label class="field">Cadera (cm)<input id="cadera" type="number" inputmode="decimal" value="98"></label>
+      </div>
+      <div class="result">
+        <div class="val" id="iccVal">–</div>
+        <div class="lab" id="iccLab">–</div>
+      </div>
+    </div>
+  </div>
+  <p style="font-size:13px;color:var(--muted);margin-top:10px">Valores orientativos con fines educativos. El IMC no distingue grasa de músculo; no sustituye una evaluación profesional.</p>
+</section>
+
+<section id="reto">
+  <div class="eyebrow">Repaso</div>
+  <h2>Pon a prueba lo aprendido</h2>
+  <div class="quiz">
+    <div class="q" id="qText"></div>
+    <div class="opts" id="qOpts"></div>
+    <div class="fb" id="qFb"></div>
+    <div class="qnav"><span id="qCount"></span><button id="qNext">Siguiente →</button></div>
+  </div>
+</section>
+
+</main>
+
+<footer>
+  <div class="wrap">
+    <p><b>Fuentes:</b> Constitución de la República Bolivariana de Venezuela (1999), art. 111 ·
+    <a href="https://www.icnl.org/wp-content/uploads/Venezuela_tripaleyorganica_del_deporte_.pdf">Ley Orgánica de Deporte, Actividad Física y Educación Física (2011)</a> ·
+    Ley Orgánica de Educación (2009) · OMS, Directrices sobre actividad física (2020) ·
+    <a href="https://www.paho.org/es/noticias/26-6-2024-cerca-1800-millones-adultos-corren-riesgo-enfermar-por-falta-actividad-fisica">OPS/OMS (2024)</a>.</p>
+  </div>
+</footer>
+
+<script>
+// people pictogram: 16 figures, 5 highlighted (~31%)
+const ppl=document.getElementById('people');
+for(let i=0;i<16;i++){const e=document.createElement('i');if(i<5)e.className='on';ppl.appendChild(e);}
+
+// accordion
+document.querySelectorAll('.card button').forEach(btn=>{
+  btn.addEventListener('click',()=>{
+    const card=btn.parentElement, body=card.querySelector('.body');
+    const open=!card.classList.contains('open');
+    card.classList.toggle('open',open);
+    btn.setAttribute('aria-expanded',open);
+    body.style.maxHeight=open?body.scrollHeight+'px':'0';
+    if(open) body.querySelectorAll('.fill').forEach(f=>setTimeout(()=>f.style.width=f.dataset.w+'%',60));
+    else body.querySelectorAll('.fill').forEach(f=>f.style.width='0');
+  });
+});
+
+// IMC
+const fmt=n=>n.toFixed(1).replace('.',',');
+function imc(){
+  const p=parseFloat(peso.value), t=parseFloat(talla.value)/100;
+  if(!(p>0&&t>0)){imcVal.textContent='–';imcLab.textContent='Introduce tus datos';return;}
+  const v=p/(t*t); let lab,col;
+  if(v<18.5){lab='Bajo peso';col='#8ab4f8'}else if(v<25){lab='Peso normal';col='#5fd38f'}
+  else if(v<30){lab='Sobrepeso';col='#f7c600'}else{lab='Obesidad';col='#ff6b7a'}
+  imcVal.textContent=fmt(v); imcLab.textContent=lab; imcLab.style.color=col;
+  // gauge segments: 15-18.5 (0-17%), 18.5-25 (17-50%), 25-30 (50-75%), 30-40 (75-100%)
+  let pos; const c=Math.max(15,Math.min(40,v));
+  if(c<18.5)pos=(c-15)/3.5*17; else if(c<25)pos=17+(c-18.5)/6.5*33; else if(c<30)pos=50+(c-25)/5*25; else pos=75+(c-30)/10*25;
+  needle.style.left=pos+'%';
+}
+peso.addEventListener('input',imc); talla.addEventListener('input',imc); imc();
+
+// ICC
+let sexo='h';
+document.querySelectorAll('#sexo button').forEach(b=>b.addEventListener('click',()=>{
+  document.querySelectorAll('#sexo button').forEach(x=>x.classList.remove('on'));b.classList.add('on');sexo=b.dataset.s;icc();}));
+function icc(){
+  const ci=parseFloat(cintura.value), ca=parseFloat(cadera.value);
+  if(!(ci>0&&ca>0)){iccVal.textContent='–';iccLab.textContent='Introduce tus datos';return;}
+  const v=ci/ca, lim=sexo==='h'?0.90:0.85;
+  iccVal.textContent=v.toFixed(2).replace('.',',');
+  iccLab.textContent=v>lim?`Riesgo aumentado (límite ${String(lim.toFixed(2)).replace('.',',')})`:`Dentro del rango saludable (límite ${String(lim.toFixed(2)).replace('.',',')})`;
+}
+cintura.addEventListener('input',icc); cadera.addEventListener('input',icc); icc();
+
+// Quiz
+const Q=[
+ {q:'Según la OMS, ¿cuántos minutos semanales de actividad moderada necesita como mínimo un adulto?',o:['60','150','300','30'],a:1,e:'150 minutos de actividad moderada (o 75 de intensa) por semana.'},
+ {q:'¿Qué artículo de la Constitución venezolana garantiza el derecho al deporte y la recreación?',o:['Art. 102','Art. 83','Art. 111','Art. 57'],a:2,e:'El artículo 111 de la CRBV de 1999.'},
+ {q:'Una persona de 80 kg y 1,75 m tiene un IMC de…',o:['22,4 (normal)','26,1 (sobrepeso)','31,0 (obesidad)','18,0 (bajo peso)'],a:1,e:'80 ÷ (1,75 × 1,75) = 26,1 → sobrepeso.'},
+ {q:'¿Qué instrumento mide los pliegues cutáneos?',o:['Tallímetro','Balanza','Plicómetro','Cinta métrica'],a:2,e:'El plicómetro mide el grosor de la grasa bajo la piel.'},
+ {q:'¿Cuál es un ritmo seguro para bajar de peso?',o:['3 a 4 kg por semana','0,5 a 1 kg por semana','5 kg al mes sin comer','No importa el ritmo'],a:1,e:'Entre 0,5 y 1 kg por semana evita perder músculo y el efecto rebote.'}
+];
+let qi=0,score=0,answered=false;
+function showQ(){
+  answered=false; const it=Q[qi]; qText.textContent=it.q; qFb.textContent='';
+  qCount.textContent=`Pregunta ${qi+1} de ${Q.length} · Aciertos: ${score}`;
+  qOpts.innerHTML=''; it.o.forEach((t,i)=>{const b=document.createElement('button');b.textContent=t;
+    b.onclick=()=>{if(answered)return;answered=true;
+      if(i===it.a){b.classList.add('ok');score++;qFb.textContent='¡Correcto! '+it.e}
+      else{b.classList.add('no');qOpts.children[it.a].classList.add('ok');qFb.textContent='Casi. '+it.e}
+      qCount.textContent=`Pregunta ${qi+1} de ${Q.length} · Aciertos: ${score}`;};
+    qOpts.appendChild(b);});
+  qNext.textContent=qi<Q.length-1?'Siguiente →':'Reiniciar ↺';
+}
+qNext.onclick=()=>{ if(qi<Q.length-1){qi++;} else {qi=0;score=0;} showQ(); };
+showQ();
+</script>
+</body>
+</html>
