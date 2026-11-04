@@ -1,0 +1,402 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Aula Virtual – Security Team Chevron</title>
+<meta name="description" content="Aula virtual de capacitación del Security Team de Chevron: cursos, calendario e inscripción en línea.">
+<meta name="author" content="Renniel Jesús Amundaray Maestre">
+<!--
+  Proyecto: Aula Virtual – Security Team
+  Autor: Renniel Jesús Amundaray Maestre · C.I. 15.716.247
+  Unidad curricular: Programación II · Docente: Ing. Kendy Serrano
+  PNF en Informática – UPTAA "Pedro Camejo"
+-->
+
+<style>
+:root{
+  --papel:#f2f5f9; --tinta:#0b1f3a; --suave:#4f5f78; --linea:#d3dbe6;
+  --azul:#0054a4; --azul-osc:#06274d; --rojo:#d71920; --verde:#1b7f5c; --ambar:#b36b00; --blanco:#fff;
+  --serif:Georgia,"Times New Roman",serif;
+  --sans:system-ui,-apple-system,"Segoe UI",Roboto,Arial,sans-serif;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{font-family:var(--sans);background:var(--papel);color:var(--tinta);line-height:1.6}
+:focus-visible{outline:3px solid var(--rojo);outline-offset:2px}
+.wrap{max-width:1040px;margin:0 auto;padding:0 20px}
+
+header{background:var(--azul-osc);color:var(--blanco);border-bottom:4px solid var(--rojo);position:sticky;top:0;z-index:10}
+header .wrap{display:flex;align-items:center;justify-content:space-between;gap:16px;padding-top:12px;padding-bottom:12px;flex-wrap:wrap}
+.logo{display:flex;align-items:center;gap:10px;color:inherit;text-decoration:none;font-family:var(--serif);font-weight:700;font-size:1.15rem}
+.logo svg{width:30px;height:30px;flex:none}
+nav ul{display:flex;gap:18px;list-style:none;flex-wrap:wrap}
+nav a{color:inherit;text-decoration:none;font-size:.95rem;padding:4px 0;border-bottom:2px solid transparent}
+nav a:hover{border-color:var(--rojo)}
+
+.hero{background:var(--azul-osc);color:var(--blanco);padding:48px 0 64px}
+.hero .wrap{display:grid;grid-template-columns:1.1fr .9fr;gap:36px;align-items:center}
+.hero h1{font-family:var(--serif);font-size:clamp(2rem,5vw,3rem);line-height:1.15;margin-bottom:16px}
+.hero p{color:#c7d4e6;max-width:46ch;margin-bottom:24px}
+.btn{display:inline-block;background:var(--rojo);color:var(--blanco);font-weight:700;padding:12px 22px;border-radius:6px;text-decoration:none;border:0;cursor:pointer;font-size:1rem;font-family:inherit}
+.btn:hover{background:#b8141a}
+.btn.sec{background:transparent;border:2px solid #4f78a8;margin-left:8px}
+.btn.sec:hover{border-color:var(--blanco);background:transparent}
+
+.avance{background:var(--blanco);color:var(--tinta);border-radius:8px;padding:20px;border-top:6px solid var(--azul)}
+.avance h2{font-family:var(--serif);font-size:1.05rem;margin-bottom:2px}
+.avance>small{color:var(--suave);display:block;margin-bottom:12px}
+.barra{margin-bottom:11px;font-size:.9rem}
+.barra div.t{display:flex;justify-content:space-between;gap:8px;margin-bottom:3px}
+.barra .pista{background:#e2e8f0;border-radius:99px;height:9px;overflow:hidden}
+.barra .relleno{height:100%;background:var(--azul);border-radius:99px}
+.barra .relleno.ok{background:var(--verde)}
+
+section{padding:56px 0}
+section h2{font-family:var(--serif);font-size:1.8rem;margin-bottom:8px}
+.lead{color:var(--suave);margin-bottom:24px;max-width:62ch}
+
+.filtro{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:20px}
+.filtro button{font:inherit;padding:7px 14px;border:2px solid var(--linea);background:var(--blanco);color:var(--tinta);border-radius:99px;cursor:pointer}
+.filtro button[aria-pressed="true"]{background:var(--azul);border-color:var(--azul);color:var(--blanco)}
+.cursos{display:grid;grid-template-columns:repeat(auto-fit,minmax(290px,1fr));gap:18px}
+.curso{background:var(--blanco);border:1px solid var(--linea);border-left:6px solid var(--azul);border-radius:6px;padding:18px}
+.curso[data-area="Operativo"]{border-left-color:var(--rojo)}
+.curso[data-area="Preventivo"]{border-left-color:var(--verde)}
+.curso h3{font-family:var(--serif);margin-bottom:4px}
+.curso p{font-size:.95rem;margin-bottom:10px}
+.curso dl{display:flex;flex-wrap:wrap;gap:6px 18px;font-size:.85rem;color:var(--suave)}
+.curso dt{display:inline;font-weight:700;color:var(--tinta)}
+.curso dd{display:inline}
+.curso dl div{white-space:nowrap}
+
+.pasos{list-style:none;counter-reset:p;display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:18px}
+.pasos li{counter-increment:p;background:var(--blanco);border:1px solid var(--linea);border-radius:6px;padding:16px 16px 16px 58px;position:relative}
+.pasos li::before{content:counter(p);position:absolute;left:14px;top:14px;width:32px;height:32px;border-radius:50%;background:var(--azul-osc);color:var(--blanco);display:grid;place-items:center;font-weight:700}
+.pasos strong{display:block;margin-bottom:2px}
+
+.tabla{overflow-x:auto}
+table{width:100%;border-collapse:collapse;background:var(--blanco);border:1px solid var(--linea)}
+th,td{padding:12px 14px;text-align:left;border-bottom:1px solid var(--linea);font-size:.95rem}
+th{background:#e4ebf4}
+.est{font-weight:700}.ok{color:var(--verde)}.cupo{color:var(--ambar)}.lleno{color:var(--rojo)}
+
+.contacto{background:#e4ebf4}
+form{background:var(--blanco);border:1px solid var(--linea);border-radius:8px;padding:24px;max-width:640px}
+.campo{margin-bottom:16px}
+label{display:block;font-weight:600;margin-bottom:4px}
+input,select,textarea{width:100%;padding:10px 12px;border:2px solid var(--linea);border-radius:6px;font:inherit;background:var(--blanco);color:var(--tinta)}
+.error{border-color:var(--rojo)!important}
+.valido{border-color:var(--verde)!important}
+.msg{color:var(--rojo);font-size:.88rem;min-height:1.2em;margin-top:2px}
+.check{display:flex;gap:10px;align-items:flex-start}
+.check input{width:auto;margin-top:6px}
+.check label{font-weight:400}
+.contador{font-size:.85rem;color:var(--suave);text-align:right}
+#exito{display:none;background:#e1f3ec;border:2px solid var(--verde);color:#0e4f3a;padding:14px;border-radius:6px;margin-top:16px;font-weight:600}
+#exito.visible{display:block}
+
+footer{background:var(--azul-osc);color:#c7d4e6;padding:26px 0;font-size:.88rem}
+footer p+p{margin-top:4px}
+
+@media (max-width:760px){
+  .hero .wrap{grid-template-columns:1fr}
+  .btn.sec{margin:8px 0 0}
+  header{position:static}
+}
+@media (prefers-reduced-motion:reduce){html{scroll-behavior:auto}}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="wrap">
+    <a class="logo" href="#inicio">
+      <svg viewBox="0 0 32 32" aria-hidden="true"><path d="M16 2 4 7v8c0 7.5 5 12.6 12 15 7-2.4 12-7.5 12-15V7L16 2z" fill="#0054a4" stroke="#fff" stroke-width="1.5"/><path d="M9 14l7-4 7 4v3l-7-4-7 4z" fill="#d71920"/><path d="M9 19l7-4 7 4v3l-7-4-7 4z" fill="#fff"/></svg>
+      Security Team · Aula Virtual
+    </a>
+    <nav aria-label="Principal">
+      <ul>
+        <li><a href="#cursos">Cursos</a></li>
+        <li><a href="#como">Cómo funciona</a></li>
+        <li><a href="#calendario">Calendario</a></li>
+        <li><a href="#inscripcion">Inscripción</a></li>
+      </ul>
+    </nav>
+  </div>
+</header>
+
+<main>
+<div class="hero" id="inicio">
+  <div class="wrap">
+    <div>
+      <h1>Capacitación continua para el equipo de seguridad</h1>
+      <p>Cursos, calendario y registro de avance del Security Team de Chevron en un solo lugar. Estudia desde el computador o el celular y mantén tus certificaciones al día.</p>
+      <a class="btn" href="#inscripcion">Inscribirme a un curso</a>
+      <a class="btn sec" href="#cursos">Ver cursos</a>
+    </div>
+    <aside class="avance" aria-label="Avance del equipo">
+      <h2>Avance del equipo por curso</h2>
+      <small>Porcentaje de personal con el curso aprobado</small>
+      <div id="barras"></div>
+    </aside>
+  </div>
+</div>
+
+<section id="cursos">
+  <div class="wrap">
+    <h2>Cursos del programa</h2>
+    <p class="lead">Seis cursos agrupados por área. Filtra para ver los que corresponden a tu función.</p>
+    <div class="filtro" id="filtro" role="group" aria-label="Filtrar por área">
+      <button type="button" data-f="Todos" aria-pressed="true">Todos</button>
+      <button type="button" data-f="Operativo" aria-pressed="false">Operativo</button>
+      <button type="button" data-f="Preventivo" aria-pressed="false">Preventivo</button>
+      <button type="button" data-f="Tecnológico" aria-pressed="false">Tecnológico</button>
+    </div>
+    <div class="cursos" id="listaCursos"></div>
+  </div>
+</section>
+
+<section id="como" style="background:#e4ebf4">
+  <div class="wrap">
+    <h2>Cómo funciona</h2>
+    <p class="lead">Cuatro pasos desde la inscripción hasta la certificación.</p>
+    <ol class="pasos">
+      <li><strong>Inscríbete</strong>Elige el curso y completa tus datos.</li>
+      <li><strong>Estudia</strong>Revisa el material y las guías del curso.</li>
+      <li><strong>Practica</strong>Asiste a las sesiones prácticas programadas.</li>
+      <li><strong>Evalúate</strong>Aprueba la evaluación y recibe tu constancia.</li>
+    </ol>
+  </div>
+</section>
+
+<section id="calendario">
+  <div class="wrap">
+    <h2>Calendario de sesiones</h2>
+    <p class="lead">Próximas sesiones y cupos disponibles.</p>
+    <div class="tabla">
+      <table>
+        <thead><tr><th>Fecha</th><th>Curso</th><th>Modalidad</th><th>Cupos</th></tr></thead>
+        <tbody>
+          <tr><td>10/11/2026</td><td>Primeros auxilios</td><td>Presencial</td><td class="est cupo">6 disponibles</td></tr>
+          <tr><td>12/11/2026</td><td>Análisis de riesgos</td><td>Virtual</td><td class="est ok">18 disponibles</td></tr>
+          <tr><td>17/11/2026</td><td>Protección de tecnología</td><td>Virtual</td><td class="est ok">22 disponibles</td></tr>
+          <tr><td>24/11/2026</td><td>Avanzadas efectivas</td><td>Mixta</td><td class="est cupo">4 disponibles</td></tr>
+          <tr><td>01/12/2026</td><td>Protección de ejecutivos VIP</td><td>Presencial</td><td class="est lleno">Completo</td></tr>
+          <tr><td>03/12/2026</td><td>Manejo de blindados</td><td>Presencial</td><td class="est cupo">3 disponibles</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</section>
+
+<section class="contacto" id="inscripcion">
+  <div class="wrap">
+    <h2>Inscripción</h2>
+    <p class="lead">Completa todos los campos. Recibirás la confirmación en tu correo.</p>
+
+    <form id="formulario" novalidate>
+      <div class="campo">
+        <label for="nombre">Nombre y apellido</label>
+        <input type="text" id="nombre" autocomplete="name" placeholder="Ej: Carlos Rodríguez">
+        <div class="msg" id="e-nombre" role="alert"></div>
+      </div>
+      <div class="campo">
+        <label for="cedula">Cédula de identidad (solo números)</label>
+        <input type="text" id="cedula" inputmode="numeric" placeholder="Ej: 12345678">
+        <div class="msg" id="e-cedula" role="alert"></div>
+      </div>
+      <div class="campo">
+        <label for="correo">Correo electrónico</label>
+        <input type="email" id="correo" autocomplete="email" placeholder="nombre@empresa.com">
+        <div class="msg" id="e-correo" role="alert"></div>
+      </div>
+      <div class="campo">
+        <label for="telefono">Teléfono</label>
+        <input type="tel" id="telefono" autocomplete="tel" placeholder="Ej: 0414-1234567">
+        <div class="msg" id="e-telefono" role="alert"></div>
+      </div>
+      <div class="campo">
+        <label for="cargo">Cargo</label>
+        <select id="cargo">
+          <option value="">Selecciona tu cargo</option>
+          <option>Supervisor de seguridad</option>
+          <option>Escolta</option>
+          <option>Conductor de vehículos blindados</option>
+          <option>Analista de riesgos</option>
+          <option>Técnico de seguridad electrónica</option>
+        </select>
+        <div class="msg" id="e-cargo" role="alert"></div>
+      </div>
+      <div class="campo">
+        <label for="curso">Curso</label>
+        <select id="curso">
+          <option value="">Selecciona un curso</option>
+        </select>
+        <div class="msg" id="e-curso" role="alert"></div>
+      </div>
+      <div class="campo">
+        <label for="mensaje">Observaciones</label>
+        <textarea id="mensaje" rows="4" maxlength="300" placeholder="Escribe tus observaciones (mínimo 10 caracteres)"></textarea>
+        <div class="contador" id="contador">0 / 300</div>
+        <div class="msg" id="e-mensaje" role="alert"></div>
+      </div>
+      <div class="campo">
+        <div class="check">
+          <input type="checkbox" id="acepto">
+          <label for="acepto">Confirmo que mis datos son correctos y acepto las normas del programa de capacitación.</label>
+        </div>
+        <div class="msg" id="e-acepto" role="alert"></div>
+      </div>
+      <button class="btn" type="submit">Enviar inscripción</button>
+      <div id="exito" role="status"></div>
+    </form>
+  </div>
+</section>
+</main>
+
+<footer>
+  <div class="wrap">
+    <p><strong>Autor:</strong> Renniel Jesús Amundaray Maestre · <strong>C.I.:</strong> 15.716.247</p>
+    <p><strong>PNF en Informática</strong> · Unidad curricular: Programación II · Docente: Ing. Kendy Serrano</p>
+    <p>Universidad Politécnica Territorial del Alto Apure “Pedro Camejo”.</p>
+    <p>Proyecto académico desarrollado por el autor. Sitio de práctica sin vínculo oficial; Chevron es marca de sus propietarios.</p>
+  </div>
+</footer>
+
+<script>
+/* ---------- Datos de los cursos ---------- */
+var CURSOS = [
+  {n:"Protección de tecnología", a:"Tecnológico", d:"Cuidado de equipos, redes y datos de la operación: contraseñas, accesos, respaldos y reporte de incidentes.", h:"16 h", m:"Virtual", p:78},
+  {n:"Manejo de blindados", a:"Operativo", d:"Conducción segura de vehículos blindados: características del vehículo, revisión previa y normas de manejo.", h:"24 h", m:"Presencial", p:54},
+  {n:"Protección de ejecutivos VIP", a:"Operativo", d:"Principios de la protección de personas: planificación, coordinación del equipo y comunicación.", h:"32 h", m:"Presencial", p:61},
+  {n:"Primeros auxilios", a:"Preventivo", d:"Atención inicial de emergencias: evaluación de la víctima, RCP, control de hemorragias y traslado.", h:"12 h", m:"Presencial", p:92},
+  {n:"Análisis de riesgos", a:"Preventivo", d:"Identificación y valoración de amenazas y vulnerabilidades, y diseño de medidas para reducirlas.", h:"20 h", m:"Virtual", p:70},
+  {n:"Avanzadas efectivas", a:"Operativo", d:"Trabajo previo al desplazamiento de un ejecutivo: reconocimiento de rutas y sedes, coordinación y reporte.", h:"16 h", m:"Mixta", p:47}
+];
+
+var lista = document.getElementById("listaCursos");
+var selCurso = document.getElementById("curso");
+
+function pintarCursos(filtro) {
+  lista.innerHTML = "";
+  CURSOS.forEach(function (c) {
+    if (filtro !== "Todos" && c.a !== filtro) return;
+    var art = document.createElement("article");
+    art.className = "curso";
+    art.setAttribute("data-area", c.a);
+    art.innerHTML = "<h3>" + c.n + "</h3><p>" + c.d + "</p>" +
+      "<dl><div><dt>Área: </dt><dd>" + c.a + "</dd></div>" +
+      "<div><dt>Duración: </dt><dd>" + c.h + "</dd></div>" +
+      "<div><dt>Modalidad: </dt><dd>" + c.m + "</dd></div></dl>";
+    lista.appendChild(art);
+  });
+}
+pintarCursos("Todos");
+
+document.getElementById("filtro").addEventListener("click", function (e) {
+  var b = e.target.closest("button");
+  if (!b) return;
+  this.querySelectorAll("button").forEach(function (x) { x.setAttribute("aria-pressed", x === b ? "true" : "false"); });
+  pintarCursos(b.getAttribute("data-f"));
+});
+
+CURSOS.forEach(function (c) {
+  var o = document.createElement("option");
+  o.textContent = c.n;
+  selCurso.appendChild(o);
+});
+
+var barras = document.getElementById("barras");
+CURSOS.forEach(function (c) {
+  var d = document.createElement("div");
+  d.className = "barra";
+  d.innerHTML = "<div class='t'><span>" + c.n + "</span><strong>" + c.p + "%</strong></div>" +
+    "<div class='pista'><div class='relleno" + (c.p >= 75 ? " ok" : "") + "' style='width:" + c.p + "%'></div></div>";
+  barras.appendChild(d);
+});
+
+/* ---------- Validaciones del formulario ---------- */
+var form = document.getElementById("formulario");
+var exito = document.getElementById("exito");
+
+var reglas = {
+  nombre: function (v) {
+    if (v === "") return "Escribe tu nombre y apellido.";
+    if (v.length < 5) return "El nombre es demasiado corto.";
+    if (!/^[A-Za-zÁÉÍÓÚáéíóúÑñÜü]+(\s+[A-Za-zÁÉÍÓÚáéíóúÑñÜü]+)+$/.test(v)) return "Usa solo letras e incluye nombre y apellido.";
+    return "";
+  },
+  cedula: function (v) {
+    if (v === "") return "Escribe tu cédula.";
+    if (!/^\d+$/.test(v)) return "La cédula debe contener solo números.";
+    if (v.length < 6 || v.length > 9) return "La cédula debe tener entre 6 y 9 dígitos.";
+    return "";
+  },
+  correo: function (v) {
+    if (v === "") return "Escribe tu correo electrónico.";
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(v)) return "Escribe un correo válido, por ejemplo nombre@dominio.com.";
+    return "";
+  },
+  telefono: function (v) {
+    if (v === "") return "Escribe tu teléfono.";
+    if (!/^(0414|0424|0412|0416|0426)-?\d{7}$/.test(v)) return "Formato válido: 0414-1234567.";
+    return "";
+  },
+  cargo: function (v) { return v === "" ? "Selecciona tu cargo." : ""; },
+  curso: function (v) { return v === "" ? "Selecciona un curso." : ""; },
+  mensaje: function (v) {
+    if (v === "") return "Escribe tus observaciones.";
+    if (v.length < 10) return "Las observaciones deben tener al menos 10 caracteres.";
+    return "";
+  }
+};
+
+function mostrar(id, texto) {
+  var campo = document.getElementById(id);
+  document.getElementById("e-" + id).textContent = texto;
+  campo.classList.toggle("error", texto !== "");
+  campo.classList.toggle("valido", texto === "");
+}
+function validarCampo(id) {
+  var error = reglas[id](document.getElementById(id).value.trim());
+  mostrar(id, error);
+  return error === "";
+}
+function validarAcepto() {
+  var ok = document.getElementById("acepto").checked;
+  document.getElementById("e-acepto").textContent = ok ? "" : "Debes confirmar tus datos y aceptar las normas.";
+  return ok;
+}
+
+Object.keys(reglas).forEach(function (id) {
+  var el = document.getElementById(id);
+  el.addEventListener("blur", function () { validarCampo(id); });
+  el.addEventListener("input", function () { if (el.classList.contains("error")) validarCampo(id); });
+});
+document.getElementById("acepto").addEventListener("change", validarAcepto);
+document.getElementById("mensaje").addEventListener("input", function (e) {
+  document.getElementById("contador").textContent = e.target.value.length + " / 300";
+});
+
+form.addEventListener("submit", function (e) {
+  e.preventDefault();
+  exito.classList.remove("visible");
+  var ok = true;
+  Object.keys(reglas).forEach(function (id) { if (!validarCampo(id)) ok = false; });
+  if (!validarAcepto()) ok = false;
+  if (!ok) {
+    var primero = form.querySelector(".error");
+    if (primero) primero.focus();
+    return;
+  }
+  var nombre = document.getElementById("nombre").value.trim().split(" ")[0];
+  exito.textContent = "Inscripción recibida, " + nombre + ". Quedaste registrado en " + selCurso.value + ". Revisa tu correo para la confirmación.";
+  exito.classList.add("visible");
+  form.reset();
+  document.getElementById("contador").textContent = "0 / 300";
+  form.querySelectorAll(".valido").forEach(function (el) { el.classList.remove("valido"); });
+});
+</script>
+</body>
+</html>
