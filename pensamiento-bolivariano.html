@@ -1,0 +1,251 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Pensamiento Bolivariano – Infografía y línea de tiempo</title>
+<meta name="author" content="Renniel Jesús Amundaray Maestre">
+<!--
+  Infografía interactiva y línea de tiempo: Pensamiento Bolivariano
+  Autor: Renniel Jesús Amundaray Maestre · C.I. 15.716.247
+  Unidad curricular: Pensamiento Bolivariano · Docente: Ing. Sarai Silva
+  PNF en Informática – UPTAA "Pedro Camejo"
+-->
+<style>
+:root{
+  --papel:#f6f4ee; --tinta:#16213a; --suave:#56607a; --linea:#dcd8c8; --blanco:#fff;
+  --azul:#143a7b; --oro:#e3a900; --rojo:#b3261e; --verde:#2e6b3f;
+  --serif:Georgia,"Times New Roman",serif;
+  --sans:system-ui,-apple-system,"Segoe UI",Roboto,Arial,sans-serif;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:var(--sans);background:var(--papel);color:var(--tinta);line-height:1.6}
+:focus-visible{outline:3px solid var(--rojo);outline-offset:2px}
+.wrap{max-width:940px;margin:0 auto;padding:0 18px}
+
+header{background:var(--azul);color:#fff;border-bottom:8px solid var(--oro);padding:34px 0 26px}
+header h1{font-family:var(--serif);font-size:clamp(1.7rem,5vw,2.6rem);line-height:1.15;margin-bottom:8px}
+header p{color:#d2dcf2;max-width:62ch}
+
+.tabs{display:flex;gap:8px;flex-wrap:wrap;margin:22px 0 4px}
+.tabs button{font:inherit;font-weight:600;padding:10px 16px;border:2px solid var(--linea);background:var(--blanco);color:var(--tinta);border-radius:8px;cursor:pointer}
+.tabs button[aria-selected="true"]{background:var(--azul);border-color:var(--azul);color:#fff}
+.panel{display:none;padding:14px 0 40px}
+.panel.activo{display:block}
+h2{font-family:var(--serif);font-size:1.65rem;margin-bottom:6px}
+h3{font-family:var(--serif);font-size:1.15rem;margin:24px 0 10px}
+.def{background:var(--blanco);border-left:6px solid var(--oro);border-radius:6px;padding:14px 18px;margin:10px 0 18px}
+
+/* Árbol */
+.arbol{display:block;margin:6px auto 0;max-width:260px;width:100%}
+.raices{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:10px;margin-bottom:12px}
+.raices button{font:inherit;text-align:left;background:var(--blanco);border:2px solid var(--linea);border-radius:10px;padding:12px 14px;cursor:pointer;color:var(--tinta)}
+.raices button strong{display:block;font-family:var(--serif)}
+.raices button small{color:var(--suave)}
+.raices button[aria-pressed="true"]{border-color:var(--rojo);background:#fff4f2}
+#raizDetalle{background:var(--blanco);border:2px solid var(--rojo);border-radius:10px;padding:14px 18px}
+#raizDetalle h4{font-family:var(--serif);font-size:1.1rem;margin-bottom:4px}
+#raizDetalle ul{padding-left:20px;margin-top:6px}
+
+.principios{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:12px}
+.pri{background:var(--blanco);border:1px solid var(--linea);border-top:5px solid var(--azul);border-radius:6px;padding:12px 14px;font-size:.94rem}
+.pri:nth-child(3n+2){border-top-color:var(--oro)}
+.pri:nth-child(3n){border-top-color:var(--rojo)}
+.pri strong{display:block;margin-bottom:2px}
+
+/* Línea de tiempo */
+.filtro{display:flex;gap:8px;flex-wrap:wrap;margin:6px 0 20px}
+.filtro button{font:inherit;font-size:.9rem;padding:7px 13px;border:2px solid var(--linea);background:var(--blanco);border-radius:99px;cursor:pointer;color:var(--tinta)}
+.filtro button[aria-pressed="true"]{background:var(--tinta);border-color:var(--tinta);color:#fff}
+.linea{position:relative;padding-left:26px}
+.linea::before{content:"";position:absolute;left:8px;top:0;bottom:0;width:4px;background:var(--linea);border-radius:2px}
+.ev{position:relative;margin-bottom:12px}
+.ev::before{content:"";position:absolute;left:-26px;top:14px;width:16px;height:16px;border-radius:50%;background:var(--c);border:3px solid var(--papel)}
+.ev details{background:var(--blanco);border:1px solid var(--linea);border-left:6px solid var(--c);border-radius:6px}
+.ev summary{cursor:pointer;padding:11px 14px;list-style:none;display:flex;gap:12px;align-items:baseline}
+.ev summary::-webkit-details-marker{display:none}
+.ev .año{font-family:var(--serif);font-weight:700;font-size:1.05rem;min-width:3.3rem;color:var(--c)}
+.ev .tit{font-weight:600}
+.ev .cuerpo{padding:0 14px 12px 14px;font-size:.94rem}
+.ev .etapa{display:inline-block;background:#ece9dc;border-radius:99px;padding:1px 10px;font-size:.78rem;margin-top:6px}
+.nota{background:var(--blanco);border:1px dashed var(--suave);border-radius:8px;padding:14px 18px;margin-top:22px;font-size:.93rem}
+.nota strong{font-family:var(--serif)}
+
+footer{background:var(--azul);color:#d2dcf2;padding:22px 0;font-size:.88rem;border-top:8px solid var(--oro)}
+footer p+p{margin-top:3px}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="wrap">
+    <h1>Pensamiento Bolivariano: raíces, hechos y proceso histórico</h1>
+    <p>Infografía interactiva y línea de tiempo de la Revolución Bolivariana, desde sus fundamentos ideológicos hasta 2026.</p>
+  </div>
+</header>
+
+<main class="wrap">
+  <div class="tabs" role="tablist" aria-label="Secciones">
+    <button role="tab" data-p="p-info" aria-selected="true">Infografía: fundamentos</button>
+    <button role="tab" data-p="p-tiempo" aria-selected="false">Línea de tiempo</button>
+  </div>
+
+  <!-- INFOGRAFÍA -->
+  <section class="panel activo" id="p-info" role="tabpanel">
+    <h2>Principios y fundamentos de la Revolución Bolivariana</h2>
+    <div class="def">Hugo Rafael Chávez Frías (1954–2013) formuló el <strong>árbol de las tres raíces</strong> como fuente ideológica de su movimiento. Toca cada raíz para conocerla.</div>
+
+    <svg class="arbol" viewBox="0 0 260 190" aria-hidden="true">
+      <circle cx="130" cy="62" r="52" fill="#2e6b3f"/><circle cx="92" cy="82" r="34" fill="#37804a"/><circle cx="168" cy="82" r="34" fill="#37804a"/>
+      <path d="M118 100h24v50h-24z" fill="#6b4a2b"/>
+      <path d="M118 148C96 152 70 160 40 182M130 150V186M142 148C164 152 190 160 220 182" stroke="#6b4a2b" stroke-width="10" stroke-linecap="round" fill="none"/>
+    </svg>
+    <div class="raices" id="raices"></div>
+    <div id="raizDetalle" aria-live="polite"></div>
+
+    <h3>Principios que se destacan</h3>
+    <div class="principios">
+      <div class="pri"><strong>Soberanía e independencia</strong>Decidir el rumbo del país sin tutelas externas, y defender los recursos naturales.</div>
+      <div class="pri"><strong>Integración latinoamericana</strong>Herencia del sueño de Bolívar de unidad entre los pueblos de América.</div>
+      <div class="pri"><strong>Igualdad y justicia social</strong>Atender a los sectores excluidos mediante programas sociales y las Misiones.</div>
+      <div class="pri"><strong>Democracia participativa y protagónica</strong>Principio de la Constitución de 1999: el pueblo participa, no solo vota.</div>
+      <div class="pri"><strong>Educación popular</strong>Herencia de Simón Rodríguez: educación para todos y para la vida.</div>
+      <div class="pri"><strong>Unión cívico-militar</strong>Colaboración entre el pueblo y la Fuerza Armada, inspirada en Zamora y Bolívar.</div>
+    </div>
+
+    <h3>El proceso en cuatro momentos</h3>
+    <div class="principios">
+      <div class="pri"><strong>Socio-histórico</strong>La crisis de los años 80 y 90 y el Caracazo (1989) dan origen al movimiento bolivariano en el cuartel.</div>
+      <div class="pri"><strong>Socio-político</strong>Del 4 de febrero de 1992 a la victoria electoral de 1998 y la nueva Constitución de 1999.</div>
+      <div class="pri"><strong>Programa</strong>Desde 2005 se habla de “socialismo del siglo XXI”, y en 2013 se presenta el Plan de la Patria.</div>
+      <div class="pri"><strong>Continuidad</strong>A partir de 2013, el proceso se desarrolla bajo el gobierno de Nicolás Maduro.</div>
+    </div>
+  </section>
+
+  <!-- LÍNEA DE TIEMPO -->
+  <section class="panel" id="p-tiempo" role="tabpanel">
+    <h2>Línea de tiempo</h2>
+    <div class="def">Toca un hecho para ver el detalle. Usa los filtros para ver una etapa a la vez. Información actualizada a noviembre de 2026.</div>
+    <div class="filtro" id="filtro" role="group" aria-label="Filtrar por etapa"></div>
+    <div class="linea" id="linea"></div>
+
+    <div class="nota">
+      <strong>Otras miradas.</strong> La Revolución Bolivariana se interpreta de formas distintas. El gobierno venezolano y sus aliados atribuyen las dificultades económicas a una “guerra económica” y a las sanciones. Sus críticos, incluidos muchos economistas y la oposición, sostienen que la crisis (caída de la producción, inflación y emigración masiva) se debió en gran parte a decisiones internas y a la caída del precio del petróleo, aunque reconocen que las sanciones agravaron la situación. Sobre la captura de Maduro, Venezuela y sus aliados hablan de agresión y secuestro, mientras que Estados Unidos lo presenta como una acción por cargos penales.
+    </div>
+  </section>
+</main>
+
+<footer>
+  <div class="wrap">
+    <p><strong>Autor:</strong> Renniel Jesús Amundaray Maestre · <strong>C.I.:</strong> 15.716.247</p>
+    <p>PNF en Informática · Unidad curricular: Pensamiento Bolivariano · Docente: Ing. Sarai Silva</p>
+    <p>Universidad Politécnica Territorial del Alto Apure “Pedro Camejo”</p>
+  </div>
+</footer>
+
+<script>
+/* ---------- Pestañas ---------- */
+var tabs = document.querySelectorAll(".tabs button");
+tabs.forEach(function (t) {
+  t.addEventListener("click", function () {
+    tabs.forEach(function (x) { x.setAttribute("aria-selected", x === t ? "true" : "false"); });
+    document.querySelectorAll(".panel").forEach(function (p) { p.classList.remove("activo"); });
+    document.getElementById(t.getAttribute("data-p")).classList.add("activo");
+    window.scrollTo({top: 0, behavior: "smooth"});
+  });
+});
+
+/* ---------- Árbol de las tres raíces ---------- */
+var RAICES = [
+  {n:"Raíz robinsoniana", p:"Simón Rodríguez (1769–1854)", t:"El maestro de Bolívar",
+   d:["Pensador y pedagogo venezolano, usó el seudónimo Samuel Robinson.","Defendió una educación popular para todos y la idea de crear modelos propios: “inventamos o erramos”.","Es la fuente de la educación bolivariana."]},
+  {n:"Raíz bolivariana", p:"Simón Bolívar (1783–1830)", t:"El Libertador",
+   d:["Lideró la independencia de varias naciones de América del Sur.","Propuso la unidad de los pueblos de América y defendió la igualdad y la libertad.","Es la raíz principal: da nombre a la Revolución Bolivariana."]},
+  {n:"Raíz zamorana", p:"Ezequiel Zamora (1817–1860)", t:"El General del Pueblo Soberano",
+   d:["Dirigió a los campesinos en la Guerra Federal (1859–1863).","Su lema, “tierras y hombres libres”, resume la lucha por la tierra y la igualdad.","Aporta la unión entre pueblo y ejército y la defensa de los sectores populares."]}
+];
+var cr = document.getElementById("raices");
+var cd = document.getElementById("raizDetalle");
+function verRaiz(i) {
+  cr.querySelectorAll("button").forEach(function (b, j) { b.setAttribute("aria-pressed", i === j ? "true" : "false"); });
+  var r = RAICES[i];
+  cd.innerHTML = "<h4>" + r.n + ": " + r.p + "</h4><p>" + r.t + "</p><ul>" +
+    r.d.map(function (x) { return "<li>" + x + "</li>"; }).join("") + "</ul>";
+}
+RAICES.forEach(function (r, i) {
+  var b = document.createElement("button");
+  b.type = "button";
+  b.setAttribute("aria-pressed", "false");
+  b.innerHTML = "<strong>" + r.n + "</strong><small>" + r.p + "</small>";
+  b.addEventListener("click", function () { verRaiz(i); });
+  cr.appendChild(b);
+});
+verRaiz(0);
+
+/* ---------- Línea de tiempo ---------- */
+var ETAPAS = {
+  "De Yare a Miraflores (1992–1998)": "#143a7b",
+  "Refundación y V República (1999–2012)": "#2e6b3f",
+  "Desaparición física de Chávez (2013)": "#8a5a00",
+  "Sanciones y presión externa (2015–2019)": "#b3261e",
+  "Gobierno de Maduro (2013–2026)": "#5b2a86"
+};
+var K = Object.keys(ETAPAS);
+var EV = [
+  [0,"1992","Rebelión del 4 de febrero","Un grupo de militares del MBR-200, liderado por el teniente coronel Hugo Chávez, se alza contra el gobierno de Carlos Andrés Pérez. La rebelión fracasa y Chávez se rinde, con el mensaje televisado del “por ahora”. Es encarcelado en Yare."],
+  [0,"1994","Salida de Yare","El 26 de marzo Chávez sale de prisión tras el sobreseimiento de la causa decretado por el presidente Rafael Caldera. Recorre el país organizando el movimiento."],
+  [0,"1997","Nace el MVR","Se funda el Movimiento V República como plataforma electoral. Chávez propone convocar una Asamblea Constituyente."],
+  [0,"1998","Victoria electoral","El 6 de diciembre Chávez gana las elecciones presidenciales con alrededor del 56 % de los votos."],
+  [1,"1999","Toma de posesión y Constitución","Asume la presidencia el 2 de febrero. El 15 de diciembre se aprueba por referendo una nueva Constitución, que renombra al país como República Bolivariana de Venezuela y establece la democracia participativa y protagónica."],
+  [1,"2000","Relegitimación","Con la nueva Constitución se repiten las elecciones de todos los poderes. Chávez es reelecto."],
+  [1,"2001","Leyes habilitantes","Se aprueban 49 leyes, entre ellas la Ley de Tierras y la Ley de Hidrocarburos."],
+  [1,"2002","Golpe de Estado","El 11 de abril Chávez es detenido en un golpe de Estado. Tras movilizaciones populares y el respaldo de sectores militares, regresa al poder el 13 y 14 de abril. Entre diciembre de 2002 y febrero de 2003 ocurre además el paro petrolero."],
+  [1,"2003","Nacen las Misiones","Se crean programas sociales como Misión Robinson (alfabetización), Barrio Adentro (salud) y Mercal (alimentación)."],
+  [1,"2004","Referendo revocatorio","El 15 de agosto Chávez es ratificado en el cargo."],
+  [1,"2006","Reelección","El 3 de diciembre gana un nuevo período presidencial. Desde 2005 plantea el “socialismo del siglo XXI”."],
+  [1,"2012","Última reelección","El 7 de octubre gana las elecciones presidenciales. En diciembre anuncia que debe operarse de nuevo en Cuba y pide a sus seguidores apoyar a Nicolás Maduro si él no puede continuar."],
+  [2,"2013","Fallece Hugo Chávez","El 5 de marzo se anuncia su muerte en Caracas, tras una enfermedad. Se decreta duelo nacional y miles de personas acuden a despedirlo."],
+  [4,"2013","Maduro asume la presidencia","El 14 de abril Nicolás Maduro gana las elecciones con un margen estrecho. La oposición cuestiona el resultado."],
+  [3,"2014","Protestas y caída del petróleo","Hay protestas y tensión política. A mediados de año cae el precio del petróleo, principal fuente de ingresos del país."],
+  [3,"2015","Decreto de Obama","En marzo, Barack Obama firma la orden ejecutiva 13692, que declara a Venezuela una “amenaza inusual y extraordinaria” para la seguridad de EE. UU. y sanciona a siete funcionarios. Venezuela la rechaza y la considera una agresión."],
+  [3,"2017","Sanciones financieras de Trump","En agosto, Donald Trump firma una orden que restringe el acceso del gobierno y de PDVSA a los mercados financieros de EE. UU. Ese año hay fuertes protestas y se elige la Asamblea Nacional Constituyente."],
+  [3,"2019","Petróleo y reconocimiento de Guaidó","El 23 de enero Juan Guaidó se proclama presidente interino y EE. UU. y otros países lo reconocen. Venezuela rompe relaciones con EE. UU. El 28 de enero se sancionan a PDVSA y en agosto se congelan los activos del gobierno."],
+  [4,"2018","Reelección de Maduro","El 20 de mayo es reelecto en elecciones que la oposición y varios países no reconocieron."],
+  [4,"2024","Elecciones del 28 de julio","El Consejo Nacional Electoral proclama ganador a Maduro. La oposición y varios gobiernos cuestionan los resultados."],
+  [4,"2025","Tensión con EE. UU.","Aumenta la presencia militar estadounidense en el Caribe y los ataques a embarcaciones que Washington vincula con el narcotráfico."],
+  [4,"2026","Captura de Maduro","El 3 de enero fuerzas de EE. UU. realizan una operación en Caracas, capturan a Nicolás Maduro y a Cilia Flores y los trasladan a Nueva York, donde se les acusa de narcoterrorismo. Maduro se declaró no culpable y el proceso sigue en curso."],
+  [4,"2026","Delcy Rodríguez, presidenta encargada","Delcy Rodríguez gobierna como presidenta encargada. En marzo, EE. UU. reconoce formalmente a su gobierno y se restablecen las relaciones entre ambos países."]
+];
+var linea = document.getElementById("linea");
+var filtro = document.getElementById("filtro");
+function pintar(f) {
+  linea.innerHTML = "";
+  var lista = EV.filter(function (e) { return f === -1 || e[0] === f; })
+    .sort(function (a, b) { return a[1] - b[1]; });
+  lista.forEach(function (e) {
+    var c = ETAPAS[K[e[0]]];
+    var d = document.createElement("div");
+    d.className = "ev";
+    d.style.setProperty("--c", c);
+    d.innerHTML = "<details><summary><span class='año'>" + e[1] + "</span><span class='tit'>" + e[2] + "</span></summary>" +
+      "<div class='cuerpo'>" + e[3] + "<br><span class='etapa'>" + K[e[0]] + "</span></div></details>";
+    linea.appendChild(d);
+  });
+}
+function botonFiltro(texto, valor) {
+  var b = document.createElement("button");
+  b.type = "button";
+  b.textContent = texto;
+  b.setAttribute("aria-pressed", valor === -1 ? "true" : "false");
+  b.addEventListener("click", function () {
+    filtro.querySelectorAll("button").forEach(function (x) { x.setAttribute("aria-pressed", x === b ? "true" : "false"); });
+    pintar(valor);
+  });
+  filtro.appendChild(b);
+}
+botonFiltro("Todas", -1);
+K.forEach(function (k, i) { botonFiltro(k, i); });
+pintar(-1);
+</script>
+</body>
+</html>
