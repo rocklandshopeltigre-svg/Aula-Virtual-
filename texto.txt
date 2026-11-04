@@ -1,0 +1,1765 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TMyC de Venezuela C.A. | Repuestos Industriales & Control de Procesos</title>
+    
+    <!-- Fuentes Google: Inter & JetBrains Mono -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+    
+    <style>
+        /* ==========================================================================
+           1. VARIABLES GLOBALES Y SISTEMA DE DISEÑO CSS3
+           ========================================================================== */
+        :root {
+            --bg-main: #090D14;
+            --bg-surface: #111827;
+            --bg-card: #1E293B;
+            --bg-card-hover: #26354A;
+            --border-color: rgba(255, 255, 255, 0.1);
+            
+            --brand-yellow: #FF9900;
+            --brand-yellow-hover: #E08700;
+            --brand-orange: #EA580C;
+            --brand-blue: #0284C7;
+            --brand-green: #10B981;
+            --brand-red: #EF4444;
+
+            --text-main: #F8FAFC;
+            --text-muted: #94A3B8;
+            --text-dark: #0F172A;
+
+            --font-sans: 'Inter', system-ui, -apple-system, sans-serif;
+            --font-mono: 'JetBrains Mono', monospace;
+
+            --shadow-glow: 0 0 20px rgba(255, 153, 0, 0.2);
+            --transition-fast: 0.2s ease;
+            --transition-normal: 0.3s ease;
+        }
+
+        /* ==========================================================================
+           2. ESTILOS BASE Y REINICIO
+           ========================================================================== */
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: var(--font-sans);
+            background-color: var(--bg-main);
+            color: var(--text-main);
+            line-height: 1.5;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            overflow-x: hidden;
+        }
+
+        /* Rejilla de Fondo Industrial */
+        .grid-pattern-bg {
+            background-image: radial-gradient(rgba(255, 153, 0, 0.12) 1px, transparent 1px);
+            background-size: 28px 28px;
+        }
+
+        a {
+            color: inherit;
+            text-decoration: none;
+        }
+
+        button, input, select, textarea {
+            font-family: inherit;
+        }
+
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: var(--bg-main);
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #334155;
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: var(--brand-yellow);
+        }
+
+        /* ==========================================================================
+           3. ESTILOS DE FORMULARIO Y VALIDACIÓN
+           ========================================================================== */
+        .form-group {
+            margin-bottom: 1rem;
+            position: relative;
+        }
+
+        .form-label {
+            display: block;
+            font-family: var(--font-mono);
+            font-size: 0.75rem;
+            color: var(--text-muted);
+            margin-bottom: 0.35rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        .input-wrapper {
+            position: relative;
+            display: flex;
+            items-center: center;
+        }
+
+        .form-control {
+            width: 100%;
+            background-color: #0B0F17;
+            border: 1px solid var(--border-color);
+            border-radius: 0.5rem;
+            padding: 0.65rem 2.25rem 0.65rem 0.85rem;
+            font-size: 0.85rem;
+            color: var(--text-main);
+            transition: border-color var(--transition-fast), box-shadow var(--transition-fast);
+        }
+
+        .form-control:focus {
+            outline: none;
+            border-color: var(--brand-yellow);
+            box-shadow: 0 0 0 2px rgba(255, 153, 0, 0.2);
+        }
+
+        textarea.form-control {
+            resize: vertical;
+            min-height: 80px;
+        }
+
+        /* Iconos e indicadores de estado de validación */
+        .validation-icon {
+            position: absolute;
+            right: 0.75rem;
+            top: 50%;
+            transform: translateY(-50%);
+            font-size: 0.9rem;
+            pointer-events: none;
+            opacity: 0;
+            transition: opacity var(--transition-fast);
+        }
+
+        textarea + .validation-icon {
+            top: 1.25rem;
+        }
+
+        /* Estados de Validación CSS */
+        .form-group.valid .form-control {
+            border-color: var(--brand-green);
+            background-color: rgba(16, 185, 129, 0.03);
+        }
+        .form-group.valid .validation-icon-valid {
+            opacity: 1;
+            color: var(--brand-green);
+        }
+
+        .form-group.invalid .form-control {
+            border-color: var(--brand-red);
+            background-color: rgba(239, 68, 68, 0.03);
+        }
+        .form-group.invalid .validation-icon-invalid {
+            opacity: 1;
+            color: var(--brand-red);
+        }
+
+        .error-message {
+            display: block;
+            font-size: 0.725rem;
+            color: var(--brand-red);
+            margin-top: 0.25rem;
+            min-height: 1.1rem;
+            transition: all var(--transition-fast);
+        }
+
+        /* ==========================================================================
+           4. ESTRUCTURA Y NAVEGACIÓN
+           ========================================================================== */
+        .top-bar {
+            background: linear-gradient(90deg, var(--brand-orange), var(--brand-yellow));
+            color: var(--text-dark);
+            padding: 0.35rem 1rem;
+            font-size: 0.75rem;
+            font-weight: 700;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .site-header {
+            position: sticky;
+            top: 0;
+            z-index: 40;
+            background: rgba(17, 24, 39, 0.85);
+            backdrop-filter: blur(12px);
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .header-container {
+            max-width: 1280px;
+            margin: 0 auto;
+            padding: 0.75rem 1.5rem;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 1rem;
+        }
+
+        .brand-logo {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .logo-box {
+            width: 2.75rem;
+            height: 2.75rem;
+            background: linear-gradient(135deg, var(--brand-yellow), var(--brand-orange));
+            border-radius: 0.5rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--text-dark);
+            font-weight: 900;
+            font-size: 1.25rem;
+            box-shadow: 0 4px 12px rgba(255, 153, 0, 0.3);
+        }
+
+        .logo-text-main {
+            font-size: 1.25rem;
+            font-weight: 900;
+            letter-spacing: -0.025em;
+            color: var(--text-main);
+            line-height: 1;
+        }
+        .logo-text-sub {
+            font-size: 0.65rem;
+            font-family: var(--font-mono);
+            color: var(--brand-blue);
+            letter-spacing: 0.05em;
+            text-transform: uppercase;
+        }
+
+        /* Buscador Global */
+        .search-box-global {
+            flex: 1;
+            max-width: 480px;
+            position: relative;
+        }
+        .search-box-global input {
+            padding-left: 2.25rem;
+            padding-right: 4.5rem;
+            background-color: rgba(9, 13, 20, 0.9);
+        }
+        .search-box-global .search-icon {
+            position: absolute;
+            left: 0.75rem;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--text-muted);
+            font-size: 0.85rem;
+        }
+        .search-btn-trigger {
+            position: absolute;
+            right: 0.25rem;
+            top: 0.25rem;
+            bottom: 0.25rem;
+            background-color: var(--brand-yellow);
+            color: var(--text-dark);
+            border: none;
+            padding: 0 0.75rem;
+            border-radius: 0.35rem;
+            font-weight: 700;
+            font-size: 0.7rem;
+            cursor: pointer;
+            transition: background-color var(--transition-fast);
+        }
+        .search-btn-trigger:hover {
+            background-color: var(--brand-yellow-hover);
+        }
+
+        .nav-actions {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+            padding: 0.55rem 1rem;
+            font-size: 0.75rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            border-radius: 0.5rem;
+            border: 1px solid transparent;
+            cursor: pointer;
+            transition: all var(--transition-fast);
+        }
+
+        .btn-primary {
+            background-color: var(--brand-yellow);
+            color: var(--text-dark);
+        }
+        .btn-primary:hover {
+            background-color: var(--brand-yellow-hover);
+            box-shadow: var(--shadow-glow);
+        }
+
+        .btn-outline {
+            background-color: transparent;
+            border-color: var(--border-color);
+            color: var(--text-main);
+        }
+        .btn-outline:hover {
+            border-color: var(--brand-yellow);
+            color: var(--brand-yellow);
+        }
+
+        .btn-success {
+            background-color: var(--brand-green);
+            color: var(--text-main);
+        }
+        .btn-success:hover {
+            background-color: #059669;
+        }
+
+        .cart-trigger {
+            position: relative;
+            background-color: var(--bg-card);
+            border: 1px solid var(--border-color);
+            padding: 0.55rem 0.85rem;
+            border-radius: 0.5rem;
+            cursor: pointer;
+            color: var(--text-main);
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        .cart-badge {
+            background-color: var(--brand-orange);
+            color: #fff;
+            font-size: 0.65rem;
+            font-weight: 800;
+            width: 1.25rem;
+            height: 1.25rem;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        /* ==========================================================================
+           5. HERO SECTION & SECTOR DE FILTROS
+           ========================================================================== */
+        .hero-section {
+            position: relative;
+            padding: 3rem 1.5rem;
+            border-bottom: 1px solid var(--border-color);
+        }
+        .hero-container {
+            max-width: 1280px;
+            margin: 0 auto;
+            text-align: center;
+        }
+        .hero-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.25rem 0.75rem;
+            border-radius: 2rem;
+            background-color: rgba(255, 153, 0, 0.1);
+            border: 1px solid rgba(255, 153, 0, 0.3);
+            color: var(--brand-yellow);
+            font-size: 0.7rem;
+            font-family: var(--font-mono);
+            text-transform: uppercase;
+            margin-bottom: 1rem;
+        }
+        .hero-title {
+            font-size: clamp(1.8rem, 4vw, 3.2rem);
+            font-weight: 900;
+            text-transform: uppercase;
+            letter-spacing: -0.03em;
+            margin-bottom: 1rem;
+            line-height: 1.1;
+        }
+        .text-gradient {
+            background: linear-gradient(135deg, var(--brand-yellow), var(--brand-orange));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        .hero-subtitle {
+            font-size: 0.9rem;
+            color: var(--text-muted);
+            max-width: 700px;
+            margin: 0 auto 2rem auto;
+        }
+
+        /* Panel Filtros */
+        .filter-panel {
+            background-color: rgba(30, 41, 59, 0.7);
+            backdrop-filter: blur(8px);
+            border: 1px solid var(--border-color);
+            border-radius: 1rem;
+            padding: 1.25rem;
+            max-width: 1000px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+            align-items: end;
+        }
+
+        /* Rejilla de Marcas */
+        .brands-section {
+            padding: 2rem 1.5rem;
+            background-color: rgba(11, 15, 23, 0.6);
+            border-bottom: 1px solid var(--border-color);
+        }
+        .brands-container {
+            max-width: 1280px;
+            margin: 0 auto;
+        }
+        .section-header-sm {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+            font-size: 0.75rem;
+            font-family: var(--font-mono);
+            color: var(--text-muted);
+            text-transform: uppercase;
+        }
+        .brands-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
+            gap: 0.75rem;
+        }
+        .brand-card {
+            background-color: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: 0.75rem;
+            padding: 0.75rem;
+            text-align: center;
+            cursor: pointer;
+            transition: all var(--transition-fast);
+        }
+        .brand-card:hover, .brand-card.active {
+            border-color: var(--brand-yellow);
+            background-color: rgba(255, 153, 0, 0.08);
+            transform: translateY(-2px);
+        }
+        .brand-card-name {
+            font-size: 0.75rem;
+            font-weight: 700;
+            color: var(--text-main);
+            display: block;
+        }
+        .brand-card-count {
+            font-size: 0.65rem;
+            font-family: var(--font-mono);
+            color: var(--text-muted);
+        }
+
+        /* ==========================================================================
+           6. CATÁLOGO DE PRODUCTOS (GRID)
+           ========================================================================== */
+        .catalog-section {
+            padding: 3rem 1.5rem;
+            flex: 1;
+        }
+        .catalog-container {
+            max-width: 1280px;
+            margin: 0 auto;
+        }
+        .catalog-header {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-between;
+            align-items: center;
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+        .parts-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 1.5rem;
+        }
+        .part-card {
+            background-color: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: 1rem;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            transition: all var(--transition-normal);
+        }
+        .part-card:hover {
+            border-color: rgba(255, 153, 0, 0.4);
+            box-shadow: var(--shadow-glow);
+            transform: translateY(-3px);
+        }
+        .part-card-img-wrapper {
+            position: relative;
+            height: 170px;
+            background-color: #05080E;
+            overflow: hidden;
+        }
+        .part-card-img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            opacity: 0.85;
+            transition: transform 0.5s ease;
+        }
+        .part-card:hover .part-card-img {
+            transform: scale(1.05);
+        }
+        .part-badge-brand {
+            position: absolute;
+            top: 0.5rem;
+            left: 0.5rem;
+            background-color: rgba(15, 23, 42, 0.9);
+            border: 1px solid rgba(255, 153, 0, 0.4);
+            color: var(--brand-yellow);
+            font-family: var(--font-mono);
+            font-size: 0.65rem;
+            font-weight: 700;
+            padding: 0.15rem 0.5rem;
+            border-radius: 0.25rem;
+            text-transform: uppercase;
+        }
+        .part-badge-stock {
+            position: absolute;
+            top: 0.5rem;
+            right: 0.5rem;
+            font-family: var(--font-mono);
+            font-size: 0.65rem;
+            font-weight: 700;
+            padding: 0.15rem 0.5rem;
+            border-radius: 0.25rem;
+        }
+        .stock-available {
+            background-color: rgba(16, 185, 129, 0.2);
+            color: var(--brand-green);
+            border: 1px solid rgba(16, 185, 129, 0.4);
+        }
+        .stock-order {
+            background-color: rgba(234, 88, 12, 0.2);
+            color: var(--brand-orange);
+            border: 1px solid rgba(234, 88, 12, 0.4);
+        }
+        .part-card-body {
+            padding: 1rem;
+            flex: 1;
+        }
+        .part-number-tag {
+            font-family: var(--font-mono);
+            font-size: 0.7rem;
+            color: var(--text-muted);
+            display: block;
+            margin-bottom: 0.25rem;
+        }
+        .part-title {
+            font-size: 0.95rem;
+            font-weight: 700;
+            color: var(--text-main);
+            margin-bottom: 0.5rem;
+            line-height: 1.3;
+        }
+        .part-desc {
+            font-size: 0.75rem;
+            color: var(--text-muted);
+            margin-bottom: 0.75rem;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+        .part-card-footer {
+            padding: 1rem;
+            border-top: 1px solid rgba(255, 255, 255, 0.05);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+        .part-price {
+            font-family: var(--font-mono);
+            font-size: 1.1rem;
+            font-weight: 800;
+            color: var(--text-main);
+        }
+        .part-price span {
+            font-size: 0.65rem;
+            color: var(--text-muted);
+            font-weight: 400;
+        }
+
+        /* Empty State */
+        .empty-state {
+            text-align: center;
+            padding: 4rem 1rem;
+            background-color: var(--bg-card);
+            border-radius: 1rem;
+            border: 1px solid var(--border-color);
+            max-width: 500px;
+            margin: 2rem auto;
+        }
+
+        /* ==========================================================================
+           7. MODALES Y DRAWER DE COTIZACIÓN
+           ========================================================================== */
+        .modal-backdrop {
+            position: fixed;
+            inset: 0;
+            z-index: 50;
+            background-color: rgba(0, 0, 0, 0.8);
+            backdrop-filter: blur(6px);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 1rem;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity var(--transition-normal);
+        }
+        .modal-backdrop.active {
+            opacity: 1;
+            pointer-events: auto;
+        }
+        .modal-container {
+            background-color: var(--bg-surface);
+            border: 1px solid var(--border-color);
+            border-radius: 1rem;
+            width: 100%;
+            max-width: 600px;
+            max-height: 90vh;
+            overflow-y: auto;
+            padding: 1.5rem;
+            position: relative;
+            transform: scale(0.95);
+            transition: transform var(--transition-normal);
+        }
+        .modal-backdrop.active .modal-container {
+            transform: scale(1);
+        }
+        .modal-close-btn {
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            background: transparent;
+            border: none;
+            color: var(--text-muted);
+            font-size: 1.25rem;
+            cursor: pointer;
+        }
+        .modal-close-btn:hover {
+            color: var(--text-main);
+        }
+
+        /* Drawer Lateral (Carrito RFQ) */
+        .drawer-backdrop {
+            position: fixed;
+            inset: 0;
+            z-index: 50;
+            background-color: rgba(0, 0, 0, 0.7);
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity var(--transition-normal);
+        }
+        .drawer-backdrop.active {
+            opacity: 1;
+            pointer-events: auto;
+        }
+        .drawer-container {
+            position: fixed;
+            top: 0;
+            right: 0;
+            bottom: 0;
+            width: 100%;
+            max-width: 440px;
+            z-index: 51;
+            background-color: var(--bg-surface);
+            border-left: 1px solid var(--border-color);
+            display: flex;
+            flex-direction: column;
+            transform: translateX(100%);
+            transition: transform var(--transition-normal);
+        }
+        .drawer-backdrop.active .drawer-container {
+            transform: translateX(0);
+        }
+        .drawer-header {
+            padding: 1rem 1.25rem;
+            background-color: var(--bg-main);
+            border-bottom: 1px solid var(--border-color);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+        .drawer-body {
+            padding: 1.25rem;
+            flex: 1;
+            overflow-y: auto;
+        }
+        .drawer-footer {
+            padding: 1.25rem;
+            background-color: var(--bg-main);
+            border-top: 1px solid var(--border-color);
+        }
+
+        .cart-item {
+            background-color: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: 0.5rem;
+            padding: 0.75rem;
+            margin-bottom: 0.75rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .cart-item-title {
+            font-size: 0.8rem;
+            font-weight: 700;
+        }
+        .cart-item-part {
+            font-family: var(--font-mono);
+            font-size: 0.7rem;
+            color: var(--brand-yellow);
+        }
+        .qty-controls {
+            display: flex;
+            align-items: center;
+            gap: 0.35rem;
+            background-color: var(--bg-main);
+            border: 1px solid var(--border-color);
+            border-radius: 0.35rem;
+            padding: 0.15rem;
+        }
+        .qty-btn {
+            background: transparent;
+            border: none;
+            color: var(--text-main);
+            width: 1.25rem;
+            height: 1.25rem;
+            cursor: pointer;
+            font-weight: 700;
+        }
+        .qty-btn:hover {
+            color: var(--brand-yellow);
+        }
+
+        /* Notifications / Toast */
+        .toast-container {
+            position: fixed;
+            bottom: 1.5rem;
+            right: 1.5rem;
+            z-index: 60;
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+        .toast {
+            background-color: var(--bg-card);
+            border: 1px solid var(--brand-yellow);
+            color: var(--text-main);
+            padding: 0.75rem 1.25rem;
+            border-radius: 0.5rem;
+            font-size: 0.8rem;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.5);
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            animation: slideIn 0.3s ease forwards;
+        }
+        @keyframes slideIn {
+            from { transform: translateY(100%); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+
+        /* ==========================================================================
+           8. PIE DE PÁGINA (FOOTER)
+           ========================================================================== */
+        .site-footer {
+            background-color: #05080E;
+            border-top: 1px solid var(--border-color);
+            padding: 3rem 1.5rem 1.5rem 1.5rem;
+            color: var(--text-muted);
+            font-size: 0.75rem;
+        }
+        .footer-container {
+            max-width: 1280px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 2rem;
+            margin-bottom: 2rem;
+        }
+        .footer-title {
+            color: var(--text-main);
+            font-weight: 700;
+            font-size: 0.85rem;
+            text-transform: uppercase;
+            margin-bottom: 1rem;
+            letter-spacing: 0.05em;
+        }
+        .footer-links {
+            list-style: none;
+        }
+        .footer-links li {
+            margin-bottom: 0.5rem;
+        }
+        .footer-links a:hover {
+            color: var(--brand-yellow);
+        }
+        .footer-bottom {
+            max-width: 1280px;
+            margin: 0 auto;
+            padding-top: 1.5rem;
+            border-top: 1px solid rgba(255, 255, 255, 0.05);
+            text-align: center;
+            font-size: 0.7rem;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .header-container {
+                flex-wrap: wrap;
+            }
+            .search-box-global {
+                order: 3;
+                max-width: 100%;
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+<body class="grid-pattern-bg">
+
+    <!-- BARRA SUPERIOR DE NOTIFICACIONES EN VIVO -->
+    <div class="top-bar">
+        <div>⚡ ATENCIÓN INMEDIATA SECTOR PETRÓLEO, GAS & ENERGÍA EN VENEZUELA Y LATAM</div>
+        <div style="display: flex; gap: 1rem; font-family: var(--font-mono);">
+            <span>TELF: +58 (212) 555-TMYC</span>
+            <span>DESPACHO NACIONAL E INTERNACIONAL</span>
+        </div>
+    </div>
+
+    <!-- ENCABEZADO PRINCIPAL -->
+    <header class="site-header">
+        <div class="header-container">
+            <a href="#" class="brand-logo">
+                <div class="logo-box">T</div>
+                <div>
+                    <div class="logo-text-main">TMyC <span style="color: var(--brand-yellow); font-size: 0.85rem;">de Venezuela C.A.</span></div>
+                    <div class="logo-text-sub">Tecnología, Mantenimiento y Control</div>
+                </div>
+            </a>
+
+            <!-- BUSCADOR GLOBAL -->
+            <div class="search-box-global">
+                <span class="search-icon">🔍</span>
+                <input type="text" id="globalSearchInput" class="form-control" placeholder="Buscar N° de Parte (ej. 1W-3637, 205210), Marca o Modelo...">
+                <button type="button" class="search-btn-trigger" id="btnTriggerSearch">BUSCAR</button>
+            </div>
+
+            <div class="nav-actions">
+                <button type="button" class="btn btn-outline" id="btnOpenSupport">
+                    🎧 Soporte Técnico
+                </button>
+                <button type="button" class="cart-trigger" id="btnOpenCart">
+                    📋 <span style="font-size: 0.75rem; font-weight: 700;">COTIZACIÓN</span>
+                    <span class="cart-badge" id="cartBadgeCount">0</span>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <main>
+        <!-- HERO SECTION -->
+        <section class="hero-section">
+            <div class="hero-container">
+                <div class="hero-badge">🛡️ Suministros Industriales Certificados OEM & Reemplazos</div>
+                <h1 class="hero-title">TMyC DE VENEZUELA <span class="text-gradient">C.A.</span></h1>
+                <p class="hero-subtitle">
+                    Especialistas en repuestos de alta exigencia para motores industriales a gas/diésel, motocompresores y sistemas de control automático de procesos.
+                </p>
+
+                <!-- PANEL DE FILTROS -->
+                <div class="filter-panel">
+                    <div>
+                        <label class="form-label" for="filterBrand">Marca / Fabricante</label>
+                        <select id="filterBrand" class="form-control">
+                            <option value="ALL">Todas las Marcas (7)</option>
+                            <option value="Caterpillar">Caterpillar (CAT)</option>
+                            <option value="Waukesha">Waukesha Gas Engines</option>
+                            <option value="Arrow Engine">Arrow Engine</option>
+                            <option value="Dresser-Rand">Dresser-Rand</option>
+                            <option value="Ingersoll Rand">Ingersoll Rand</option>
+                            <option value="Altronic">Altronic Ignition</option>
+                            <option value="FW Murphy">FW Murphy Controls</option>
+                        </select>
+                    </div>
+
+                    <div>
+                        <label class="form-label" for="filterCategory">Categoría</label>
+                        <select id="filterCategory" class="form-control">
+                            <option value="ALL">Todas las Categorías</option>
+                            <option value="Sistemas de Ignición">Sistemas de Ignición y Electrónica</option>
+                            <option value="Pistones y Camisas">Pistones, Anillos y Camisas</option>
+                            <option value="Válvulas y Culatas">Cámaras, Culatas y Válvulas</option>
+                            <option value="Empacaduras y Sellos">Kits de Empacaduras</option>
+                            <option value="Bombas y Compresores">Bombas y Compresores</option>
+                            <option value="Instrumentación y Control">Instrumentación y Controles</option>
+                        </select>
+                    </div>
+
+                    <div>
+                        <label class="form-label" for="filterStock">Disponibilidad</label>
+                        <select id="filterStock" class="form-control">
+                            <option value="ALL">Todos los Estados</option>
+                            <option value="En Stock">En Almacén (Entrega Inmediata)</option>
+                            <option value="Bajo Pedido">Bajo Pedido (Importación Directa)</option>
+                        </select>
+                    </div>
+
+                    <div>
+                        <button type="button" class="btn btn-outline" id="btnResetFilters" style="width: 100%;">
+                            🔄 Reiniciar Filtros
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- SECCIÓN DE MARCAS -->
+        <section class="brands-section">
+            <div class="brands-container">
+                <div class="section-header-sm">
+                    <span>🏭 Marcas Industriales Suministradas por TMyC</span>
+                    <span id="activeBrandLabel" style="color: var(--brand-yellow);">Mostrando Todas</span>
+                </div>
+                <div class="brands-grid" id="brandsGridContainer">
+                    <!-- Se renderiza vía JS -->
+                </div>
+            </div>
+        </section>
+
+        <!-- CATÁLOGO DE REPUESTOS -->
+        <section class="catalog-section">
+            <div class="catalog-container">
+                <div class="catalog-header">
+                    <div>
+                        <h2 style="font-size: 1.5rem; font-weight: 900; text-transform: uppercase;">Catálogo Técnico de Repuestos</h2>
+                        <p style="font-size: 0.8rem; color: var(--text-muted);">Consulta especificaciones y solicita la cotización técnica instantánea.</p>
+                    </div>
+                    <div style="font-size: 0.8rem; color: var(--text-muted); font-family: var(--font-mono);">
+                        Repuestos disponibles: <strong id="catalogCount" style="color: var(--brand-yellow);">0</strong>
+                    </div>
+                </div>
+
+                <div class="parts-grid" id="partsGrid">
+                    <!-- Repuestos renderizados por JS -->
+                </div>
+
+                <div class="empty-state" id="emptyCatalogState" style="display: none;">
+                    <div style="font-size: 2.5rem; margin-bottom: 0.5rem;">📦</div>
+                    <h3 style="font-size: 1.1rem; font-weight: 700;">No se encontraron repuestos</h3>
+                    <p style="font-size: 0.8rem; color: var(--text-muted); margin-bottom: 1rem;">No hay coincidencias con los términos de búsqueda o filtros seleccionados.</p>
+                    <button type="button" class="btn btn-primary" id="btnResetEmpty">Ver Catálogo Completo</button>
+                </div>
+            </div>
+        </section>
+
+        <!-- SECCIÓN DE SUSCRIPCIÓN BOLETÍN TÉCNICO (CON VALIDACIÓN FORMULARIO) -->
+        <section style="background-color: var(--bg-surface); border-top: 1px solid var(--border-color); padding: 3rem 1.5rem;">
+            <div style="max-width: 800px; margin: 0 auto; text-align: center;">
+                <h3 style="font-size: 1.3rem; font-weight: 800; text-transform: uppercase; margin-bottom: 0.5rem;">Boletín de Actualizaciones Técnicas & Repuestos</h3>
+                <p style="font-size: 0.85rem; color: var(--text-muted); margin-bottom: 1.5rem;">
+                    Reciba en su correo electrónico las listas de inventario actualizado para motores Caterpillar, Waukesha y sistemas Altronic.
+                </p>
+
+                <form id="newsletterForm" novalidate style="display: flex; flex-direction: column; gap: 0.5rem; max-width: 500px; margin: 0 auto; text-align: left;">
+                    <div class="form-group" id="group-newsletter-email">
+                        <label class="form-label" for="newsletterEmail">Correo Electrónico Corporativo *</label>
+                        <div class="input-wrapper">
+                            <input type="email" id="newsletterEmail" class="form-control" placeholder="ejemplo@empresa.com" required>
+                            <span class="validation-icon validation-icon-valid">✓</span>
+                            <span class="validation-icon validation-icon-invalid">✕</span>
+                        </div>
+                        <span class="error-message" id="error-newsletterEmail"></span>
+                    </div>
+
+                    <button type="submit" class="btn btn-primary" style="padding: 0.75rem;">
+                        Suscripción Técnica Directa
+                    </button>
+                </form>
+            </div>
+        </section>
+    </main>
+
+    <!-- FOOTER -->
+    <footer class="site-footer">
+        <div class="footer-container">
+            <div>
+                <div class="footer-title">TMyC de Venezuela C.A.</div>
+                <p style="line-height: 1.6; margin-bottom: 1rem;">
+                    Tecnología, Mantenimiento y Control de Procesos Industriales. Soluciones integrales de repuestos pesados para el sector petrolero, gasífero e industrial.
+                </p>
+                <div style="font-family: var(--font-mono); color: var(--brand-yellow);">RIF: J-30000000-0</div>
+            </div>
+            <div>
+                <div class="footer-title">Marcas de Motores</div>
+                <ul class="footer-links">
+                    <li><a href="#">Caterpillar (Series 3500, G3500)</a></li>
+                    <li><a href="#">Waukesha (VHP Series, AT27GL)</a></li>
+                    <li><a href="#">Arrow Engine (Series C, K, L)</a></li>
+                    <li><a href="#">Compresores Ingersoll Rand & Dresser-Rand</a></li>
+                </ul>
+            </div>
+            <div>
+                <div class="footer-title">Control e Ignición</div>
+                <ul class="footer-links">
+                    <li><a href="#">Sistemas de Ignición Altronic CPU-95</a></li>
+                    <li><a href="#">Controles & Swichgages FW Murphy</a></li>
+                    <li><a href="#">Kits de Reparación Mayor y Menor</a></li>
+                </ul>
+            </div>
+            <div>
+                <div class="footer-title">Contacto Técnico</div>
+                <p style="margin-bottom: 0.5rem;">📍 Av. Principal Industrial, Caracas / Anzoátegui, Venezuela.</p>
+                <p style="margin-bottom: 0.5rem;">📧 ventas@tmycvenezuela.com</p>
+                <p>📞 +58 (212) 555-TMYC / +58 (414) 555-0199</p>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            &copy; 2026 TMyC de Venezuela C.A. Todos los derechos reservados. Las marcas registradas pertenecen a sus respectivos fabricantes OEM.
+        </div>
+    </footer>
+
+    <!-- DRAWER LATERAL DE COTIZACIÓN (RFQ) -->
+    <div class="drawer-backdrop" id="cartDrawerBackdrop">
+        <div class="drawer-container">
+            <div class="drawer-header">
+                <div style="font-weight: 800; text-transform: uppercase; font-size: 0.9rem; display: flex; align-items: center; gap: 0.5rem;">
+                    📋 Lista de Cotización (RFQ)
+                </div>
+                <button type="button" class="modal-close-btn" id="btnCloseCartDrawer" style="position: static;">✕</button>
+            </div>
+
+            <div class="drawer-body">
+                <div id="cartItemsList">
+                    <!-- Items de cotización -->
+                </div>
+
+                <!-- FORMULARIO DE VALIDACIÓN DE DATOS PARA ENVÍO DE RFQ -->
+                <form id="rfqCustomerForm" novalidate style="margin-top: 1.5rem; border-top: 1px solid var(--border-color); pt-3;">
+                    <div style="font-size: 0.8rem; font-weight: 700; uppercase; color: var(--brand-yellow); margin-bottom: 0.75rem;">
+                        Datos Requeridos del Solicitante:
+                    </div>
+
+                    <!-- Nombre del cliente -->
+                    <div class="form-group" id="group-rfqName">
+                        <label class="form-label" for="rfqName">Nombre y Apellido / Empresa *</label>
+                        <div class="input-wrapper">
+                            <input type="text" id="rfqName" class="form-control" placeholder="Ej. Ing. Roberto Mendoza - Gas Corp" required>
+                            <span class="validation-icon validation-icon-valid">✓</span>
+                            <span class="validation-icon validation-icon-invalid">✕</span>
+                        </div>
+                        <span class="error-message" id="error-rfqName"></span>
+                    </div>
+
+                    <!-- Correo -->
+                    <div class="form-group" id="group-rfqEmail">
+                        <label class="form-label" for="rfqEmail">Correo Electrónico Corporativo *</label>
+                        <div class="input-wrapper">
+                            <input type="email" id="rfqEmail" class="form-control" placeholder="compras@gascorp.com" required>
+                            <span class="validation-icon validation-icon-valid">✓</span>
+                            <span class="validation-icon validation-icon-invalid">✕</span>
+                        </div>
+                        <span class="error-message" id="error-rfqEmail"></span>
+                    </div>
+
+                    <!-- Teléfono -->
+                    <div class="form-group" id="group-rfqPhone">
+                        <label class="form-label" for="rfqPhone">Teléfono de Contacto *</label>
+                        <div class="input-wrapper">
+                            <input type="tel" id="rfqPhone" class="form-control" placeholder="+58 414 1234567" required>
+                            <span class="validation-icon validation-icon-valid">✓</span>
+                            <span class="validation-icon validation-icon-invalid">✕</span>
+                        </div>
+                        <span class="error-message" id="error-rfqPhone"></span>
+                    </div>
+                </form>
+            </div>
+
+            <div class="drawer-footer">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem; font-family: var(--font-mono);">
+                    <span style="font-size: 0.8rem; color: var(--text-muted);">Estimado Referencial:</span>
+                    <span id="rfqTotalDisplay" style="font-size: 1.1rem; font-weight: 800; color: var(--brand-yellow);">$0.00 USD</span>
+                </div>
+
+                <div style="display: flex; flex-direction: column; gap: 0.5rem;">
+                    <button type="button" class="btn btn-primary" id="btnSubmitRFQ">
+                        ✉️ Enviar Cotización Formal
+                    </button>
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 0.5rem;">
+                        <button type="button" class="btn btn-outline" id="btnDownloadQuote">
+                            💾 Resumen (.TXT)
+                        </button>
+                        <button type="button" class="btn btn-success" id="btnWhatsAppQuote">
+                            📱 Vía WhatsApp
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- MODAL DE CONSULTA TÉCNICA Y CROSS-REFERENCE -->
+    <div class="modal-backdrop" id="supportModalBackdrop">
+        <div class="modal-container">
+            <button type="button" class="modal-close-btn" id="btnCloseSupportModal">✕</button>
+            
+            <div style="margin-bottom: 1.25rem;">
+                <div style="color: var(--brand-yellow); font-family: var(--font-mono); font-size: 0.75rem; uppercase;">Soporte Especializado TMyC</div>
+                <h3 style="font-size: 1.25rem; font-weight: 800; uppercase;">Solicitud de Equivalencia / Soporte Técnico</h3>
+            </div>
+
+            <form id="supportForm" novalidate>
+                <!-- Nombre -->
+                <div class="form-group" id="group-suppName">
+                    <label class="form-label" for="suppName">Nombre Completo / Empresa *</label>
+                    <div class="input-wrapper">
+                        <input type="text" id="suppName" class="form-control" placeholder="Ej. Ing. Maria Torres - PDVSA / Contratista" required>
+                        <span class="validation-icon validation-icon-valid">✓</span>
+                        <span class="validation-icon validation-icon-invalid">✕</span>
+                    </div>
+                    <span class="error-message" id="error-suppName"></span>
+                </div>
+
+                <!-- Correo -->
+                <div class="form-group" id="group-suppEmail">
+                    <label class="form-label" for="suppEmail">Correo de Contacto *</label>
+                    <div class="input-wrapper">
+                        <input type="email" id="suppEmail" class="form-control" placeholder="mtorres@empresa.com" required>
+                        <span class="validation-icon validation-icon-valid">✓</span>
+                        <span class="validation-icon validation-icon-invalid">✕</span>
+                    </div>
+                    <span class="error-message" id="error-suppEmail"></span>
+                </div>
+
+                <!-- Número de Parte OEM -->
+                <div class="form-group" id="group-suppPartNumber">
+                    <label class="form-label" for="suppPartNumber">Número de Parte OEM o Código del Sistema *</label>
+                    <div class="input-wrapper">
+                        <input type="text" id="suppPartNumber" class="form-control" placeholder="Ej. 1W-3637 / 205210D / CPU-95" required>
+                        <span class="validation-icon validation-icon-valid">✓</span>
+                        <span class="validation-icon validation-icon-invalid">✕</span>
+                    </div>
+                    <span class="error-message" id="error-suppPartNumber"></span>
+                </div>
+
+                <!-- Detalles -->
+                <div class="form-group" id="group-suppDetails">
+                    <label class="form-label" for="suppDetails">Detalles de la Consulta Técnica *</label>
+                    <div class="input-wrapper">
+                        <textarea id="suppDetails" class="form-control" placeholder="Escriba el modelo de motor exacto, falla registrada o requerimiento de equivalencia..." required></textarea>
+                        <span class="validation-icon validation-icon-valid">✓</span>
+                        <span class="validation-icon validation-icon-invalid">✕</span>
+                    </div>
+                    <span class="error-message" id="error-suppDetails"></span>
+                </div>
+
+                <button type="submit" class="btn btn-primary" style="width: 100%; padding: 0.75rem;">
+                    🚀 Transmitir Solicitud a Ingeniería
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <!-- CONTENEDOR DE NOTIFICACIONES TOAST -->
+    <div class="toast-container" id="toastContainer"></div>
+
+    <!-- ==========================================================================
+       9. LÓGICA JAVASCRIPT NATIVA (SIN DEPENDENCIAS)
+       ========================================================================== -->
+    <script>
+        /**
+         * MOTOR DE DATOS MASTER (MARCAS Y PRODUCTOS INDUSTRIALES)
+         */
+        const BRANDS_DATA = [
+            { name: "Caterpillar", label: "CAT Engines", count: "+12,400 Partes" },
+            { name: "Waukesha", label: "Waukesha Gas", count: "+8,900 Partes" },
+            { name: "Arrow Engine", label: "Arrow Engine", count: "+3,100 Partes" },
+            { name: "Dresser-Rand", label: "Dresser-Rand", count: "+5,400 Partes" },
+            { name: "Ingersoll Rand", label: "Ingersoll Rand", count: "+6,200 Partes" },
+            { name: "Altronic", label: "Altronic Ignición", count: "+2,800 Partes" },
+            { name: "FW Murphy", label: "FW Murphy", count: "+4,100 Partes" }
+        ];
+
+        const PARTS_DATABASE = [
+            {
+                id: "CAT-1W3637",
+                partNumber: "1W-3637",
+                name: "Cámara / Culata de Cilindro Completa",
+                brand: "Caterpillar",
+                category: "Válvulas y Culatas",
+                price: 1850.00,
+                stock: "En Stock",
+                condition: "OEM Genuino",
+                engineCompatibility: "Caterpillar Series 3508, 3512, 3516",
+                specs: "Ensamblada completa con válvulas, resortes y guías de alta resistencia.",
+                image: "https://images.unsplash.com/photo-1581092160607-ee22621dd758?auto=format&fit=crop&w=600&q=80"
+            },
+            {
+                id: "WAU-205210",
+                partNumber: "205210D",
+                name: "Camisa de Fuerza de Cilindro",
+                brand: "Waukesha",
+                category: "Pistones y Camisas",
+                price: 640.00,
+                stock: "En Stock",
+                condition: "OEM Genuino",
+                engineCompatibility: "Waukesha VHP L5790, L7042GSI, P9390",
+                specs: "Rectificado endurecido por inducción. Incluye kit de orings de sello.",
+                image: "https://images.unsplash.com/photo-1504328345606-18bbc8c9d7d1?auto=format&fit=crop&w=600&q=80"
+            },
+            {
+                id: "ALT-691118",
+                partNumber: "691118-1",
+                name: "Módulo de Ignición Digital CPU-95",
+                brand: "Altronic",
+                category: "Sistemas de Ignición",
+                price: 2450.00,
+                stock: "En Stock",
+                condition: "OEM Genuino",
+                engineCompatibility: "Motores Industriales a Gas Caterpillar y Waukesha",
+                specs: "Energía de chispa programable, capacidad hasta 16 cilindros.",
+                image: "https://images.unsplash.com/photo-1518770660439-4636190af475?auto=format&fit=crop&w=600&q=80"
+            },
+            {
+                id: "MUR-EG2100",
+                partNumber: "EG2100",
+                name: "Controlador Regulador Electrónico",
+                brand: "FW Murphy",
+                category: "Instrumentación y Control",
+                price: 495.00,
+                stock: "En Stock",
+                condition: "OEM Genuino",
+                engineCompatibility: "Arrow Serie C, Waukesha F18, CAT G3306",
+                specs: "Control isócrono de velocidad, operación en 12V y 24V DC.",
+                image: "https://images.unsplash.com/photo-1581092335397-9583fe92d232?auto=format&fit=crop&w=600&q=80"
+            },
+            {
+                id: "ARR-C96",
+                partNumber: "C-96-KIT",
+                name: "Kit de Pistón y Anillos Heavy Duty",
+                brand: "Arrow Engine",
+                category: "Pistones y Camisas",
+                price: 380.00,
+                stock: "En Stock",
+                condition: "Reemplazo Certificado",
+                engineCompatibility: "Motores Monocilíndricos Arrow C-96",
+                specs: "Pistón de alta presión con juego de anillos cromados.",
+                image: "https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?auto=format&fit=crop&w=600&q=80"
+            },
+            {
+                id: "DR-504421",
+                partNumber: "504421-OEM",
+                name: "Juego de Sellos para Turbina",
+                brand: "Dresser-Rand",
+                category: "Empacaduras y Sellos",
+                price: 1120.00,
+                stock: "Bajo Pedido",
+                condition: "OEM Genuino",
+                engineCompatibility: "Turbinas y Compresores Dresser-Rand KG2 / VIGOR",
+                specs: "Fabricado en aleación Inconel resistente a altas temperaturas.",
+                image: "https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?auto=format&fit=crop&w=600&q=80"
+            },
+            {
+                id: "IR-39840418",
+                partNumber: "39840418",
+                name: "Elemento Separador Aire/Aceite",
+                brand: "Ingersoll Rand",
+                category: "Bombas y Compresores",
+                price: 290.00,
+                stock: "En Stock",
+                condition: "OEM Genuino",
+                engineCompatibility: "Compresores Ingersoll Rand SSR & Sierra",
+                specs: "Filtración avanzada con retención de aceite menor a 2 PPM.",
+                image: "https://images.unsplash.com/photo-1581092580497-e0d23cbdf1dc?auto=format&fit=crop&w=600&q=80"
+            }
+        ];
+
+        // ESTADO GLOBAL DE LA APLICACIÓN
+        const state = {
+            filterBrand: "ALL",
+            filterCategory: "ALL",
+            filterStock: "ALL",
+            searchQuery: "",
+            cart: []
+        };
+
+        /* ==========================================================================
+           MODULO DE VALIDACIONES JAVASCRIPT NATIVAS (RECURSO PRINCIPAL)
+           ========================================================================== */
+        const Validators = {
+            // RegEx para Email corporativo o estándar
+            email: (value) => {
+                const regex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+                if (!value.trim()) return "El correo electrónico es requerido.";
+                if (!regex.test(value.trim())) return "Ingrese una dirección de correo válida (ej. nombre@empresa.com).";
+                return null;
+            },
+
+            // RegEx para Números Telefónicos locales/internacionales
+            phone: (value) => {
+                const regex = /^\+?[0-9\s\-\(\)]{7,20}$/;
+                if (!value.trim()) return "El número de teléfono es requerido.";
+                if (!regex.test(value.trim())) return "Teléfono inválido. Use números, espacios o código de país (+58...).";
+                return null;
+            },
+
+            // Validación de Código OEM / Número de Parte
+            partNumber: (value) => {
+                const regex = /^[a-zA-Z0-9\-\.\/]{3,30}$/;
+                if (!value.trim()) return "El número de parte o código es obligatorio.";
+                if (!regex.test(value.trim())) return "El código debe tener al menos 3 caracteres válidos (letras, números, guiones).";
+                return null;
+            },
+
+            // Validación General de Texto Requerido
+            requiredText: (value, minLen = 3, fieldName = "Este campo") => {
+                if (!value.trim()) return `${fieldName} no puede estar vacío.`;
+                if (value.trim().length < minLen) return `${fieldName} debe tener al menos ${minLen} caracteres.`;
+                return null;
+            }
+        };
+
+        /**
+         * Manejador central de validación visual de input
+         */
+        function validateField(inputEl, validatorFn) {
+            const groupEl = inputEl.closest('.form-group');
+            if (!groupEl) return true;
+
+            const errorEl = groupEl.querySelector('.error-message');
+            const errorMsg = validatorFn(inputEl.value);
+
+            if (errorMsg) {
+                groupEl.classList.remove('valid');
+                groupEl.classList.add('invalid');
+                if (errorEl) errorEl.textContent = errorMsg;
+                return false;
+            } else {
+                groupEl.classList.remove('invalid');
+                groupEl.classList.add('valid');
+                if (errorEl) errorEl.textContent = '';
+                return true;
+            }
+        }
+
+        /**
+         * Configuración de validación en tiempo real en un formulario
+         */
+        function setupFormValidation(formEl, rules) {
+            // Escuchar eventos input y blur
+            Object.keys(rules).forEach(fieldId => {
+                const inputEl = formEl.querySelector(`#${fieldId}`);
+                if (!inputEl) return;
+
+                const validatorFn = rules[fieldId];
+
+                inputEl.addEventListener('input', () => validateField(inputEl, validatorFn));
+                inputEl.addEventListener('blur', () => validateField(inputEl, validatorFn));
+            });
+
+            // Función evaluadora global del formulario
+            return function isFormValid() {
+                let isValid = true;
+                Object.keys(rules).forEach(fieldId => {
+                    const inputEl = formEl.querySelector(`#${fieldId}`);
+                    if (inputEl) {
+                        const fieldValid = validateField(inputEl, rules[fieldId]);
+                        if (!fieldValid) isValid = false;
+                    }
+                });
+                return isValid;
+            };
+        }
+
+        /* ==========================================================================
+           INICIALIZACIÓN DE FORMULARIOS Y VALIDACIONES
+           ========================================================================== */
+        
+        // 1. Formulario de Suscripción (Boletín)
+        const newsletterForm = document.getElementById('newsletterForm');
+        const validateNewsletter = setupFormValidation(newsletterForm, {
+            'newsletterEmail': (val) => Validators.email(val)
+        });
+
+        newsletterForm.addEventListener('submit', (e) => {
+            e.preventDefault();
+            if (validateNewsletter()) {
+                showToast("¡Gracias por suscribirte al boletín técnico de TMyC!");
+                newsletterForm.reset();
+                newsletterForm.querySelectorAll('.form-group').forEach(g => g.classList.remove('valid', 'invalid'));
+            } else {
+                showToast("Por favor corrija los errores en el formulario.");
+            }
+        });
+
+        // 2. Formulario de Soporte Técnico y Cross-Reference
+        const supportForm = document.getElementById('supportForm');
+        const validateSupport = setupFormValidation(supportForm, {
+            'suppName': (val) => Validators.requiredText(val, 3, "El nombre"),
+            'suppEmail': (val) => Validators.email(val),
+            'suppPartNumber': (val) => Validators.partNumber(val),
+            'suppDetails': (val) => Validators.requiredText(val, 10, "La descripción técnica")
+        });
+
+        supportForm.addEventListener('submit', (e) => {
+            e.preventDefault();
+            if (validateSupport()) {
+                showToast("Solicitud recibida. Un ingeniero de TMyC le responderá a la brevedad.");
+                closeSupportModal();
+                supportForm.reset();
+                supportForm.querySelectorAll('.form-group').forEach(g => g.classList.remove('valid', 'invalid'));
+            } else {
+                showToast("Por favor complete todos los campos requeridos correctamente.");
+            }
+        });
+
+        // 3. Formulario de Datos para Cotización (RFQ Drawer)
+        const rfqCustomerForm = document.getElementById('rfqCustomerForm');
+        const validateRFQForm = setupFormValidation(rfqCustomerForm, {
+            'rfqName': (val) => Validators.requiredText(val, 3, "El nombre"),
+            'rfqEmail': (val) => Validators.email(val),
+            'rfqPhone': (val) => Validators.phone(val)
+        });
+
+        /* ==========================================================================
+           RENDERIZADO Y LÓGICA DE LA INTERFAZ
+           ========================================================================== */
+
+        // Renderizar Marcas
+        function renderBrands() {
+            const container = document.getElementById('brandsGridContainer');
+            container.innerHTML = BRANDS_DATA.map(b => `
+                <div class="brand-card ${state.filterBrand === b.name ? 'active' : ''}" onclick="setBrandFilter('${b.name}')">
+                    <span class="brand-card-name">${b.name}</span>
+                    <span class="brand-card-count">${b.count}</span>
+                </div>
+            `).join('');
+        }
+
+        function setBrandFilter(brandName) {
+            state.filterBrand = state.filterBrand === brandName ? "ALL" : brandName;
+            document.getElementById('filterBrand').value = state.filterBrand;
+            document.getElementById('activeBrandLabel').textContent = state.filterBrand === "ALL" ? "Mostrando Todas" : `Filtrado: ${state.filterBrand}`;
+            renderBrands();
+            renderCatalog();
+        }
+
+        // Renderizar Catálogo de Repuestos
+        function renderCatalog() {
+            const grid = document.getElementById('partsGrid');
+            const emptyState = document.getElementById('emptyCatalogState');
+
+            const filteredParts = PARTS_DATABASE.filter(part => {
+                const matchBrand = state.filterBrand === "ALL" || part.brand === state.filterBrand;
+                const matchCategory = state.filterCategory === "ALL" || part.category === state.filterCategory;
+                const matchStock = state.filterStock === "ALL" || part.stock === state.filterStock;
+                
+                const q = state.searchQuery.toLowerCase().trim();
+                const matchQuery = !q || 
+                    part.partNumber.toLowerCase().includes(q) ||
+                    part.name.toLowerCase().includes(q) ||
+                    part.brand.toLowerCase().includes(q) ||
+                    part.engineCompatibility.toLowerCase().includes(q);
+
+                return matchBrand && matchCategory && matchStock && matchQuery;
+            });
+
+            document.getElementById('catalogCount').textContent = filteredParts.length;
+
+            if (filteredParts.length === 0) {
+                grid.innerHTML = "";
+                emptyState.style.display = "block";
+                return;
+            }
+
+            emptyState.style.display = "none";
+            grid.innerHTML = filteredParts.map(part => `
+                <div class="part-card">
+                    <div>
+                        <div class="part-card-img-wrapper">
+                            <img src="${part.image}" alt="${part.name}" class="part-card-img" onerror="this.src='https://placehold.co/600x400/1e293b/ff9900?text=${part.partNumber}'">
+                            <span class="part-badge-brand">${part.brand}</span>
+                            <span class="part-badge-stock ${part.stock === 'En Stock' ? 'stock-available' : 'stock-order'}">${part.stock}</span>
+                        </div>
+                        <div class="part-card-body">
+                            <span class="part-number-tag">N° OEM: ${part.partNumber}</span>
+                            <h3 class="part-title">${part.name}</h3>
+                            <p class="part-desc">${part.specs}</p>
+                            <div style="font-size: 0.7rem; font-family: var(--font-mono); color: var(--text-muted); background: rgba(0,0,0,0.3); padding: 0.35rem 0.5rem; border-radius: 0.25rem;">
+                                🎯 ${part.engineCompatibility}
+                            </div>
+                        </div>
+                    </div>
+                    <div class="part-card-footer">
+                        <div class="part-price">
+                            $${part.price.toFixed(2)} <span>USD</span>
+                        </div>
+                        <button type="button" class="btn btn-primary" onclick="addToCart('${part.id}')">
+                            + Cotizar
+                        </button>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        /* ==========================================================================
+           GESTIÓN DEL CARRITO DE COTIZACIÓN (RFQ)
+           ========================================================================== */
+        function addToCart(partId) {
+            const part = PARTS_DATABASE.find(p => p.id === partId);
+            if (!part) return;
+
+            const existing = state.cart.find(item => item.id === partId);
+            if (existing) {
+                existing.qty += 1;
+            } else {
+                state.cart.push({ ...part, qty: 1 });
+            }
+
+            updateCartUI();
+            showToast(`Añadido: Repuesto ${part.partNumber}`);
+        }
+
+        function updateCartQty(partId, delta) {
+            const item = state.cart.find(i => i.id === partId);
+            if (!item) return;
+
+            item.qty += delta;
+            if (item.qty <= 0) {
+                state.cart = state.cart.filter(i => i.id !== partId);
+            }
+            updateCartUI();
+        }
+
+        function updateCartUI() {
+            const badge = document.getElementById('cartBadgeCount');
+            const totalQty = state.cart.reduce((sum, item) => sum + item.qty, 0);
+            badge.textContent = totalQty;
+
+            const listContainer = document.getElementById('cartItemsList');
+            const totalDisplay = document.getElementById('rfqTotalDisplay');
+
+            if (state.cart.length === 0) {
+                listContainer.innerHTML = `
+                    <div style="text-align: center; padding: 3rem 1rem; color: var(--text-muted);">
+                        <div style="font-size: 2rem; margin-bottom: 0.5rem;">📋</div>
+                        <p style="font-size: 0.8rem;">La lista de cotización está vacía.</p>
+                    </div>
+                `;
+                totalDisplay.textContent = "$0.00 USD";
+                return;
+            }
+
+            let grandTotal = 0;
+            listContainer.innerHTML = state.cart.map(item => {
+                const subtotal = item.price * item.qty;
+                grandTotal += subtotal;
+                return `
+                    <div class="cart-item">
+                        <div>
+                            <div class="cart-item-part">${item.brand} | ${item.partNumber}</div>
+                            <div class="cart-item-title">${item.name}</div>
+                            <div style="font-size: 0.75rem; font-family: var(--font-mono); color: var(--text-muted);">$${item.price.toFixed(2)} c/u</div>
+                        </div>
+                        <div class="qty-controls">
+                            <button type="button" class="qty-btn" onclick="updateCartQty('${item.id}', -1)">-</button>
+                            <span style="font-size: 0.8rem; font-family: var(--font-mono); font-weight: 700; px-1;">${item.qty}</span>
+                            <button type="button" class="qty-btn" onclick="updateCartQty('${item.id}', 1)">+</button>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+
+            totalDisplay.textContent = `$${grandTotal.toFixed(2)} USD`;
+        }
+
+        // Acciones del Cotizador con Validación Obligatoria del Formulario de Cliente
+        function executeRFQAction(actionType) {
+            if (state.cart.length === 0) {
+                showToast("Agregue al menos un repuesto a la cotización.");
+                return;
+            }
+
+            // Forzar validación de datos de contacto del cliente
+            const isCustomerValid = validateRFQForm();
+            if (!isCustomerValid) {
+                showToast("Por favor complete los datos del solicitante en el formulario inferior.");
+                return;
+            }
+
+            const clientName = document.getElementById('rfqName').value.trim();
+            const clientEmail = document.getElementById('rfqEmail').value.trim();
+            const clientPhone = document.getElementById('rfqPhone').value.trim();
+
+            if (actionType === 'SUBMIT' || actionType === 'TXT') {
+                let summary = "========================================================\n";
+                summary += "       TMyC DE VENEZUELA C.A. - SOLICITUD DE COTIZACIÓN\n";
+                summary += "========================================================\n\n";
+                summary += `Cliente: ${clientName}\n`;
+                summary += `Correo: ${clientEmail}\n`;
+                summary += `Teléfono: ${clientPhone}\n`;
+                summary += "Fecha: " + new Date().toLocaleString('es-VE') + "\n";
+                summary += "--------------------------------------------------------\n\n";
+
+                let total = 0;
+                state.cart.forEach(item => {
+                    const subtotal = item.price * item.qty;
+                    total += subtotal;
+                    summary += `• Marca: ${item.brand}\n  N° Parte: ${item.partNumber}\n  Item: ${item.name}\n  Cant: ${item.qty} x $${item.price.toFixed(2)} = $${subtotal.toFixed(2)} USD\n\n`;
+                });
+
+                summary += "--------------------------------------------------------\n";
+                summary += `TOTAL ESTIMADO REFERENCIAL: $${total.toFixed(2)} USD\n`;
+
+                if (actionType === 'TXT') {
+                    const blob = new Blob([summary], { type: "text/plain;charset=utf-8" });
+                    const link = document.createElement("a");
+                    link.href = URL.createObjectURL(blob);
+                    link.download = `Cotizacion_TMyC_${clientName.replace(/\s+/g, '_')}.txt`;
+                    link.click();
+                    showToast("Resumen de cotización descargado.");
+                } else {
+                    showToast("¡Solicitud enviada a ventas@tmycvenezuela.com!");
+                    closeCartDrawer();
+                }
+            } else if (actionType === 'WHATSAPP') {
+                let text = `Hola TMyC de Venezuela C.A., soy *${clientName}* (${clientEmail}). Deseo solicitar cotización oficial para:\n\n`;
+                state.cart.forEach(item => {
+                    text += `• ${item.brand} N° ${item.partNumber} (${item.name}) - Cant: ${item.qty}\n`;
+                });
+                const url = `https://wa.me/584145550199?text=${encodeURIComponent(text)}`;
+                window.open(url, '_blank');
+            }
+        }
+
+        /* ==========================================================================
+           CONTROLES DE MODALES Y EVENTOS UI
+           ========================================================================== */
+        function openCartDrawer() {
+            document.getElementById('cartDrawerBackdrop').classList.add('active');
+        }
+        function closeCartDrawer() {
+            document.getElementById('cartDrawerBackdrop').classList.remove('active');
+        }
+
+        function openSupportModal(partRef = "") {
+            if (partRef) {
+                const input = document.getElementById('suppPartNumber');
+                input.value = partRef;
+                validateField(input, (val) => Validators.partNumber(val));
+            }
+            document.getElementById('supportModalBackdrop').classList.add('active');
+        }
+        function closeSupportModal() {
+            document.getElementById('supportModalBackdrop').classList.remove('active');
+        }
+
+        function showToast(message) {
+            const container = document.getElementById('toastContainer');
+            const toast = document.createElement('div');
+            toast.className = 'toast';
+            toast.innerHTML = `<span>⚙️</span> <span>${message}</span>`;
+            container.appendChild(toast);
+
+            setTimeout(() => {
+                toast.style.opacity = '0';
+                toast.style.transition = 'opacity 0.3s ease';
+                setTimeout(() => toast.remove(), 300);
+            }, 3500);
+        }
+
+        // EVENTOS AL CÁRGAR LA PÁGINA
+        document.addEventListener('DOMContentLoaded', () => {
+            renderBrands();
+            renderCatalog();
+            updateCartUI();
+
+            // Buscador Global
+            const searchInput = document.getElementById('globalSearchInput');
+            const triggerSearch = () => {
+                state.searchQuery = searchInput.value;
+                renderCatalog();
+            };
+            searchInput.addEventListener('input', triggerSearch);
+            document.getElementById('btnTriggerSearch').addEventListener('click', triggerSearch);
+
+            // Filtros de Selects
+            document.getElementById('filterBrand').addEventListener('change', (e) => {
+                state.filterBrand = e.target.value;
+                renderBrands();
+                renderCatalog();
+            });
+            document.getElementById('filterCategory').addEventListener('change', (e) => {
+                state.filterCategory = e.target.value;
+                renderCatalog();
+            });
+            document.getElementById('filterStock').addEventListener('change', (e) => {
+                state.filterStock = e.target.value;
+                renderCatalog();
+            });
+            document.getElementById('btnResetFilters').addEventListener('click', () => {
+                state.filterBrand = "ALL";
+                state.filterCategory = "ALL";
+                state.filterStock = "ALL";
+                state.searchQuery = "";
+                document.getElementById('filterBrand').value = "ALL";
+                document.getElementById('filterCategory').value = "ALL";
+                document.getElementById('filterStock').value = "ALL";
+                searchInput.value = "";
+                renderBrands();
+                renderCatalog();
+            });
+            document.getElementById('btnResetEmpty').addEventListener('click', () => {
+                document.getElementById('btnResetFilters').click();
+            });
+
+            // Apertura/Cierre de Drawer y Modales
+            document.getElementById('btnOpenCart').addEventListener('click', openCartDrawer);
+            document.getElementById('btnCloseCartDrawer').addEventListener('click', closeCartDrawer);
+            document.getElementById('btnOpenSupport').addEventListener('click', () => openSupportModal());
+            document.getElementById('btnCloseSupportModal').addEventListener('click', closeSupportModal);
+
+            // Botones de Acción de Cotizador RFQ
+            document.getElementById('btnSubmitRFQ').addEventListener('click', () => executeRFQAction('SUBMIT'));
+            document.getElementById('btnDownloadQuote').addEventListener('click', () => executeRFQAction('TXT'));
+            document.getElementById('btnWhatsAppQuote').addEventListener('click', () => executeRFQAction('WHATSAPP'));
+        });
+    </script>
+</body>
+</html>
