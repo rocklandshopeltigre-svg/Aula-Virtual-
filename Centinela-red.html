@@ -1,0 +1,441 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Centinela Red · Alerta temprana de ciberseguridad</title>
+<style>
+  :root{
+    --fondo:#0b1220; --panel:#121b2e; --panel2:#18233a; --borde:#24324f;
+    --texto:#e6ecf7; --suave:#93a3c0; --acento:#3aa0ff;
+    --ok:#22c55e; --baja:#38bdf8; --media:#f59e0b; --alta:#f97316; --critica:#ef4444;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;font-family:"Segoe UI",Roboto,Arial,sans-serif;background:var(--fondo);color:var(--texto);font-size:14px}
+  header{display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap;
+         padding:16px 24px;background:linear-gradient(90deg,#0f1a30,#14264a);border-bottom:1px solid var(--borde)}
+  .marca{display:flex;align-items:center;gap:12px}
+  .escudo{width:40px;height:40px}
+  h1{font-size:20px;margin:0;letter-spacing:.5px}
+  .sub{color:var(--suave);font-size:12px}
+  .estado-sis{display:flex;align-items:center;gap:8px;color:var(--suave);font-size:12px}
+  .pulso{width:10px;height:10px;border-radius:50%;background:var(--ok);box-shadow:0 0 0 0 rgba(34,197,94,.7);animation:pulso 1.8s infinite}
+  @keyframes pulso{70%{box-shadow:0 0 0 10px rgba(34,197,94,0)}100%{box-shadow:0 0 0 0 rgba(34,197,94,0)}}
+  .aviso-demo{display:none;background:#3b2f0b;color:#fde68a;border-bottom:1px solid #6b5313;padding:8px 24px;font-size:13px}
+  main{padding:20px 24px;display:grid;gap:18px;grid-template-columns:repeat(12,1fr)}
+  .tarjeta{background:var(--panel);border:1px solid var(--borde);border-radius:12px;padding:16px}
+  .tarjeta h2{font-size:13px;text-transform:uppercase;letter-spacing:1px;color:var(--suave);margin:0 0 12px}
+  .c4{grid-column:span 4}.c8{grid-column:span 8}.c12{grid-column:span 12}.c3{grid-column:span 3}
+  @media(max-width:900px){.c4,.c8,.c3{grid-column:span 12}}
+  .medidor{display:flex;align-items:center;gap:18px}
+  .medidor svg{width:150px;height:150px;flex-shrink:0}
+  .nivel{font-size:26px;font-weight:700}
+  .explica{color:var(--suave);font-size:12px;margin-top:6px;line-height:1.5}
+  .contadores{display:grid;grid-template-columns:repeat(4,1fr);gap:10px}
+  .cont{background:var(--panel2);border-radius:10px;padding:12px;border-left:4px solid}
+  .cont b{display:block;font-size:26px}
+  .cont span{color:var(--suave);font-size:12px}
+  .equipos{display:grid;grid-template-columns:repeat(auto-fill,minmax(190px,1fr));gap:10px}
+  .eq{background:var(--panel2);border:1px solid var(--borde);border-radius:10px;padding:10px 12px;display:flex;gap:10px;align-items:center}
+  .eq .ico{font-size:22px}
+  .eq .n{font-weight:600;font-size:13px}
+  .eq .d{color:var(--suave);font-size:11px}
+  .eq.caido{border-color:var(--critica);background:#2a1418}
+  .eq.riesgo{border-color:var(--media)}
+  .punto{width:9px;height:9px;border-radius:50%;margin-left:auto;flex-shrink:0}
+  .filtros{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:10px;align-items:center}
+  .btn{background:var(--panel2);color:var(--texto);border:1px solid var(--borde);border-radius:8px;padding:6px 10px;cursor:pointer;font-size:12px}
+  .btn:hover{border-color:var(--acento)}
+  .btn.activo{background:var(--acento);border-color:var(--acento);color:#04111f;font-weight:600}
+  .btn.peq{padding:3px 8px;font-size:11px}
+  input[type=search]{background:var(--panel2);border:1px solid var(--borde);color:var(--texto);border-radius:8px;padding:6px 10px;flex:1;min-width:160px}
+  .lista{max-height:460px;overflow:auto}
+  .alerta{display:grid;grid-template-columns:96px 1fr auto;gap:12px;padding:10px;border-bottom:1px solid var(--borde);align-items:start}
+  .alerta.atendida{opacity:.45}
+  .etq{display:inline-block;padding:3px 8px;border-radius:6px;font-size:11px;font-weight:700;text-transform:uppercase;color:#0b1220;text-align:center}
+  .alerta .t{font-weight:600}
+  .alerta .m{color:var(--suave);font-size:12.5px;margin-top:3px;line-height:1.45}
+  .alerta .f{color:var(--suave);font-size:11px;text-align:right;white-space:nowrap}
+  .nuevo{animation:brillo 2s ease-out}
+  @keyframes brillo{from{background:rgba(239,68,68,.25)}to{background:transparent}}
+  table{width:100%;border-collapse:collapse;font-size:12.5px}
+  th,td{text-align:left;padding:8px;border-bottom:1px solid var(--borde)}
+  th{color:var(--suave);font-weight:600}
+  .vacio{color:var(--suave);padding:14px;text-align:center}
+  .eq.bloq{border-color:#a855f7;background:#211433}
+  .etq-bloq{display:inline-block;background:#a855f7;color:#fff;font-size:10px;font-weight:700;border-radius:5px;padding:1px 6px;margin-top:3px}
+  .btn.rojo{background:#7f1d1d;border-color:#ef4444}
+  .btn.verde{background:#14532d;border-color:#22c55e}
+  .modo{font-size:11px;padding:2px 8px;border-radius:6px;background:var(--panel2);color:var(--suave);margin-left:6px;text-transform:none;letter-spacing:0}
+  .fondo-modal{position:fixed;inset:0;background:rgba(0,0,0,.6);display:none;align-items:center;justify-content:center;z-index:10;padding:16px}
+  .modal{background:var(--panel);border:1px solid var(--borde);border-radius:12px;padding:20px;width:100%;max-width:420px}
+  .modal h3{margin:0 0 6px}
+  .modal label{display:block;font-size:12px;color:var(--suave);margin:10px 0 4px}
+  .modal input,.modal textarea{width:100%;background:var(--panel2);border:1px solid var(--borde);color:var(--texto);border-radius:8px;padding:8px;font:inherit}
+  .modal .acciones{display:flex;gap:8px;justify-content:flex-end;margin-top:14px}
+  .msg{font-size:12px;margin-top:8px;min-height:16px}
+  footer{color:var(--suave);font-size:11px;text-align:center;padding:10px 0 24px}
+  code{background:var(--panel2);padding:1px 5px;border-radius:4px}
+</style>
+</head>
+<body>
+<header>
+  <div class="marca">
+    <svg class="escudo" viewBox="0 0 64 64" aria-hidden="true">
+      <path d="M32 4 8 13v17c0 15 10 26 24 30 14-4 24-15 24-30V13Z" fill="#14315e" stroke="#3aa0ff" stroke-width="3"/>
+      <circle cx="32" cy="30" r="9" fill="none" stroke="#3aa0ff" stroke-width="3"/>
+      <circle cx="32" cy="30" r="3" fill="#3aa0ff"/>
+      <path d="M17 30h6M41 30h6M32 15v6M32 39v6" stroke="#3aa0ff" stroke-width="3" stroke-linecap="round"/>
+    </svg>
+    <div>
+      <h1>CENTINELA RED</h1>
+      <div class="sub">Sistema de alerta temprana de ciberseguridad · <span id="empresa">—</span></div>
+    </div>
+  </div>
+  <div class="estado-sis"><div class="pulso" id="pulso"></div><span id="ciclo">Conectando…</span></div>
+</header>
+<div class="aviso-demo" id="avisoDemo">
+  ⚠ Modo demostración: los equipos y las alertas de esta página son simulados. En la empresa, el panel muestra datos reales al ejecutar <code>python centinela.py</code>.
+</div>
+
+<main>
+  <section class="tarjeta c4">
+    <h2>Nivel de amenaza</h2>
+    <div class="medidor">
+      <svg viewBox="0 0 120 120">
+        <circle cx="60" cy="60" r="50" fill="none" stroke="#24324f" stroke-width="12"/>
+        <circle id="arco" cx="60" cy="60" r="50" fill="none" stroke="#22c55e" stroke-width="12"
+                stroke-linecap="round" stroke-dasharray="314" stroke-dashoffset="314" transform="rotate(-90 60 60)"
+                style="transition:stroke-dashoffset .8s, stroke .8s"/>
+        <text id="puntaje" x="60" y="66" text-anchor="middle" fill="#e6ecf7" font-size="28" font-weight="700">0</text>
+        <text x="60" y="84" text-anchor="middle" fill="#93a3c0" font-size="10">de 100</text>
+      </svg>
+      <div>
+        <div class="nivel" id="nivel">Bajo</div>
+        <div class="explica" id="explicaNivel">Sin alertas pendientes.</div>
+      </div>
+    </div>
+  </section>
+
+  <section class="tarjeta c8">
+    <h2>Alertas pendientes por severidad</h2>
+    <div class="contadores">
+      <div class="cont" style="border-color:var(--critica)"><b id="nCritica">0</b><span>Críticas</span></div>
+      <div class="cont" style="border-color:var(--alta)"><b id="nAlta">0</b><span>Altas</span></div>
+      <div class="cont" style="border-color:var(--media)"><b id="nMedia">0</b><span>Medias</span></div>
+      <div class="cont" style="border-color:var(--baja)"><b id="nBaja">0</b><span>Bajas</span></div>
+    </div>
+    <div class="explica" style="margin-top:12px">
+      Equipos en línea: <b id="enLinea">0/0</b> · Red vigilada: <b id="subred">—</b> · Dispositivos desconocidos: <b id="nDesc">0</b>
+    </div>
+  </section>
+
+  <section class="tarjeta c12">
+    <h2>Equipos de la red</h2>
+    <div class="equipos" id="equipos"></div>
+  </section>
+
+  <section class="tarjeta c8">
+    <h2>Registro de alertas</h2>
+    <div class="filtros" id="filtros">
+      <button class="btn activo" data-f="pendientes">Pendientes</button>
+      <button class="btn" data-f="todas">Todas</button>
+      <button class="btn" data-f="critica">Críticas</button>
+      <button class="btn" data-f="alta">Altas</button>
+      <input type="search" id="buscar" placeholder="Buscar IP, equipo o tipo…">
+      <button class="btn" id="atenderTodas">Marcar todas como atendidas</button>
+    </div>
+    <div class="lista" id="alertas"></div>
+  </section>
+
+  <section class="tarjeta c4">
+    <h2>Dispositivos desconocidos</h2>
+    <div class="lista" id="desconocidos"></div>
+    <div class="explica">Si un dispositivo es legítimo (por ejemplo, el teléfono del supervisor), pulse <b>Autorizar</b>. Si es sospechoso, pulse <b>Bloquear</b>.</div>
+  </section>
+
+  <section class="tarjeta c12">
+    <h2>Cuarentena · equipos bloqueados <span class="modo" id="modoCuarentena">—</span></h2>
+    <div class="lista" id="bloqueos"></div>
+    <div class="filtros" style="margin-top:12px">
+      <button class="btn rojo" onclick="abrirModal('bloquear')">Bloquear un equipo manualmente</button>
+      <span class="explica" style="margin:0">Los equipos bloqueados quedan aislados hasta que el personal autorizado los revise y los libere con la clave de intervención.</span>
+    </div>
+  </section>
+</main>
+<div class="fondo-modal" id="fondoModal">
+  <div class="modal">
+    <h3 id="mTitulo">—</h3>
+    <div class="explica" id="mTexto"></div>
+    <div id="mCamposBloqueo">
+      <label>Dirección IP</label><input id="mIp" placeholder="192.168.1.150">
+      <label>MAC (opcional)</label><input id="mMac" placeholder="aa:bb:cc:dd:ee:ff">
+      <label>Motivo</label><input id="mMotivo" placeholder="Equipo sospechoso de infección">
+    </div>
+    <label>Responsable (nombre del técnico autorizado)</label><input id="mResp" autocomplete="name">
+    <div id="mCampoNota"><label>Nota de la intervención</label><textarea id="mNota" rows="2" placeholder="Se analizó el equipo, se eliminó el malware…"></textarea></div>
+    <label>Clave de intervención</label><input id="mClave" type="password" autocomplete="off">
+    <div class="msg" id="mMsg"></div>
+    <div class="acciones"><button class="btn" onclick="cerrarModal()">Cancelar</button><button class="btn activo" id="mOk">Confirmar</button></div>
+  </div>
+</div>
+<footer>Centinela Red v1.1 · Desarrollado por Renniel Jesús Amundaray Maestre · Técnico Superior en Informática</footer>
+
+<script>
+const COLORES = {critica:"#ef4444", alta:"#f97316", media:"#f59e0b", baja:"#38bdf8"};
+const NOMBRE_SEV = {critica:"Crítica", alta:"Alta", media:"Media", baja:"Baja"};
+const ICONOS = {router:"📡", servidor:"🗄️", impresora:"🖨️", pc:"💻"};
+let filtro = "pendientes", vistos = new Set(), primeraCarga = true, DEMO = false;
+
+const $ = id => document.getElementById(id);
+const esc = s => String(s ?? "").replace(/[&<>"']/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+
+/* ---------- Conexión con el servidor (o simulación si no hay servidor) ---------- */
+async function api(ruta, metodo="GET", datos=null){
+  if (DEMO) return Simulador.api(ruta, metodo, datos);
+  const op = {method: metodo, cache:"no-store"};
+  if (datos){ op.body = JSON.stringify(datos); op.headers = {"Content-Type":"application/json"}; }
+  const r = await fetch(ruta, op);
+  if (!r.ok && !(metodo === "POST" && [400,403,409].includes(r.status))) throw new Error(r.status);
+  const t = r.headers.get("content-type") || "";
+  if (!t.includes("json")) throw new Error("sin api");
+  return r.json();
+}
+
+async function refrescar(){
+  try{
+    const [estado, alertas] = await Promise.all([api("api/estado"), api("api/alertas?limite=200")]);
+    pintarEstado(estado); pintarAlertas(alertas);
+    $("pulso").style.background = "var(--ok)";
+  }catch(e){
+    if (!DEMO){ activarDemo(); return refrescar(); }
+    $("ciclo").textContent = "Sin conexión con el servidor";
+    $("pulso").style.background = "var(--critica)";
+  }
+}
+
+function activarDemo(){
+  DEMO = true;
+  $("avisoDemo").style.display = "block";
+  Simulador.iniciar();
+}
+
+/* ---------- Pintado ---------- */
+function pintarEstado(e){
+  $("empresa").textContent = e.empresa || "—";
+  $("ciclo").textContent = "Última revisión: " + (e.ultimo_ciclo || "en curso…") + (e.modo === "demo" ? " (demo)" : "");
+  $("subred").textContent = e.subred;
+  $("enLinea").textContent = e.en_linea + "/" + e.total;
+  $("nDesc").textContent = e.desconocidos.length;
+  ["critica","alta","media","baja"].forEach(s => $("n" + s[0].toUpperCase() + s.slice(1)).textContent = e.conteo[s] || 0);
+
+  const p = e.puntaje, col = p >= 60 ? COLORES.critica : p >= 30 ? COLORES.alta : p >= 10 ? COLORES.media : "#22c55e";
+  $("arco").style.strokeDashoffset = 314 - 314 * p / 100;
+  $("arco").style.stroke = col;
+  $("puntaje").textContent = p;
+  $("nivel").textContent = e.nivel; $("nivel").style.color = col;
+  $("explicaNivel").textContent =
+    p >= 60 ? "Amenaza activa probable. Atienda primero las alertas críticas." :
+    p >= 30 ? "Varias señales de riesgo. Revise los equipos marcados." :
+    p >= 10 ? "Hay hallazgos que conviene revisar hoy." : "La red opera con normalidad.";
+
+  $("equipos").innerHTML = e.equipos.map(q => {
+    const caido = q.estado === "caido", riesgo = (q.puertos_riesgo || []).length > 0;
+    const color = caido ? COLORES.critica : q.estado === "en_linea" ? (riesgo ? COLORES.media : "#22c55e") : "#64748b";
+    const detalle = caido ? "Sin respuesta" : q.estado === "en_linea"
+      ? (q.latencia != null ? q.latencia + " ms" : "En línea") + (riesgo ? " · puertos: " + q.puertos_riesgo.join(", ") : "")
+      : "Esperando respuesta…";
+    return `<div class="eq ${q.bloqueado ? "bloq" : caido ? "caido" : riesgo ? "riesgo" : ""}">
+      <div class="ico">${ICONOS[q.tipo] || "💻"}</div>
+      <div><div class="n">${esc(q.nombre)}</div><div class="d">${esc(q.ip)} · ${esc(detalle)}</div>
+        ${q.bloqueado ? '<span class="etq-bloq">🔒 EN CUARENTENA</span>' : ""}</div>
+      <div class="punto" style="background:${color}"></div></div>`;
+  }).join("");
+
+  const bloqIps = new Set((e.bloqueos || []).map(b => b.ip));
+  const cq = e.cuarentena || {};
+  $("modoCuarentena").textContent = !cq.activa ? "Desactivada" : (cq.automatica ? "Automática" : "Solo manual") + (cq.modo_prueba ? " · modo prueba" : "");
+  $("bloqueos").innerHTML = (e.bloqueos || []).length ? `<table><tr><th>Equipo</th><th>Motivo</th><th>Bloqueado por</th><th>Aplicado</th><th></th></tr>` +
+    e.bloqueos.map(b => `<tr><td><b>${esc(b.ip || "—")}</b><div style="color:var(--suave);font-size:11px">${esc(b.mac || "")}</div></td>
+      <td style="max-width:420px">${esc(b.motivo)}</td>
+      <td>${esc(b.responsable)}<div style="color:var(--suave);font-size:11px">${esc(b.creado)}</div></td>
+      <td style="font-size:11px">Firewall: ${esc(b.firewall)}<br>Router: ${esc(b.router)}</td>
+      <td><button class="btn peq verde" onclick="abrirModal('liberar',${b.id},'${esc(b.ip || b.mac)}')">Liberar</button></td></tr>`).join("") + "</table>"
+    : `<div class="vacio">✔ No hay equipos en cuarentena.</div>`;
+
+  $("desconocidos").innerHTML = e.desconocidos.length ? `<table><tr><th>IP</th><th>MAC</th><th></th></tr>` +
+    e.desconocidos.map(d => `<tr><td>${esc(d.ip)}</td><td><code>${esc(d.mac)}</code><div class="d" style="color:var(--suave);font-size:11px">Visto: ${esc(d.ultima_vez)}</div></td>
+      <td style="white-space:nowrap">${bloqIps.has(d.ip) ? '<span class="etq-bloq">🔒 Bloqueado</span>' :
+        `<button class="btn peq" onclick="autorizar('${esc(d.mac)}')">Autorizar</button>
+         <button class="btn peq rojo" onclick="abrirModal('bloquear','${esc(d.ip)}','${esc(d.mac)}')">Bloquear</button>`}</td></tr>`).join("") + "</table>"
+    : `<div class="vacio">✔ No hay dispositivos desconocidos.</div>`;
+}
+
+function pintarAlertas(lista){
+  const q = $("buscar").value.toLowerCase();
+  const filtradas = lista.filter(a =>
+    (filtro === "todas" || (filtro === "pendientes" ? !a.atendida : a.severidad === filtro && !a.atendida)) &&
+    (!q || (a.categoria + a.mensaje + a.origen).toLowerCase().includes(q)));
+  $("alertas").innerHTML = filtradas.length ? filtradas.map(a => {
+    const nueva = !primeraCarga && !vistos.has(a.id);
+    return `<div class="alerta ${a.atendida ? "atendida" : ""} ${nueva ? "nuevo" : ""}">
+      <span class="etq" style="background:${COLORES[a.severidad]}">${NOMBRE_SEV[a.severidad]}</span>
+      <div><div class="t">${esc(a.categoria)}${a.repeticiones > 1 ? ` <span class="d" style="color:var(--suave)">×${a.repeticiones}</span>` : ""}</div>
+        <div class="m">${esc(a.mensaje)}</div></div>
+      <div class="f">${esc(a.creada)}<br>${a.atendida ? "Atendida" : `<button class="btn peq" onclick="atender(${a.id})">Atender</button>`}</div>
+    </div>`;
+  }).join("") : `<div class="vacio">✔ No hay alertas para mostrar.</div>`;
+  const nuevasCriticas = lista.filter(a => !vistos.has(a.id) && a.severidad === "critica" && !a.atendida);
+  if (!primeraCarga && nuevasCriticas.length) sonar();
+  lista.forEach(a => vistos.add(a.id));
+  primeraCarga = false;
+}
+
+function sonar(){
+  try{
+    const ctx = new (window.AudioContext || window.webkitAudioContext)();
+    [0, .25].forEach(t => { const o = ctx.createOscillator(), g = ctx.createGain();
+      o.frequency.value = 880; o.connect(g); g.connect(ctx.destination);
+      g.gain.setValueAtTime(.08, ctx.currentTime + t); o.start(ctx.currentTime + t); o.stop(ctx.currentTime + t + .15); });
+  }catch(e){}
+}
+
+async function atender(id){ await api(`api/alertas/${id}/atender`, "POST"); refrescar(); }
+async function autorizar(mac){ await api(`api/dispositivos/${mac}/autorizar`, "POST"); refrescar(); }
+$("atenderTodas").onclick = async () => { await api("api/alertas/atender-todas", "POST"); refrescar(); };
+$("filtros").addEventListener("click", ev => {
+  const b = ev.target.closest("[data-f]"); if (!b) return;
+  document.querySelectorAll("[data-f]").forEach(x => x.classList.remove("activo"));
+  b.classList.add("activo"); filtro = b.dataset.f; refrescar();
+});
+$("buscar").addEventListener("input", refrescar);
+
+/* ---------- Ventana de intervención (bloquear / liberar) ---------- */
+let accionModal = null;
+function abrirModal(tipo, a, b){
+  accionModal = {tipo, a, b};
+  const bloq = tipo === "bloquear";
+  $("mTitulo").textContent = bloq ? "Bloquear equipo (cuarentena)" : "Liberar equipo " + b;
+  $("mTexto").textContent = bloq
+    ? "El equipo quedará aislado de la red hasta que el personal autorizado lo libere."
+    : "Confirme que el equipo fue revisado y es seguro reconectarlo." + (DEMO ? " (En la demo, la clave es: demo)" : "");
+  $("mCamposBloqueo").style.display = bloq ? "block" : "none";
+  $("mCampoNota").style.display = bloq ? "none" : "block";
+  $("mIp").value = bloq && a ? a : ""; $("mMac").value = bloq && b ? b : ""; $("mMotivo").value = "";
+  $("mNota").value = ""; $("mClave").value = ""; $("mMsg").textContent = "";
+  $("fondoModal").style.display = "flex";
+}
+function cerrarModal(){ $("fondoModal").style.display = "none"; }
+$("mOk").onclick = async () => {
+  const resp = $("mResp").value.trim(), clave = $("mClave").value;
+  if (!resp || !clave){ $("mMsg").style.color = "var(--alta)"; $("mMsg").textContent = "Indique el responsable y la clave."; return; }
+  const r = accionModal.tipo === "bloquear"
+    ? await api("api/bloquear", "POST", {ip: $("mIp").value.trim(), mac: $("mMac").value.trim(), motivo: $("mMotivo").value.trim(), responsable: resp, clave})
+    : await api(`api/bloqueos/${accionModal.a}/liberar`, "POST", {responsable: resp, nota: $("mNota").value.trim(), clave});
+  $("mMsg").style.color = r.ok ? "var(--ok)" : "var(--critica)";
+  $("mMsg").textContent = r.mensaje || (r.ok ? "Listo." : "No se pudo completar.");
+  if (r.ok){ setTimeout(cerrarModal, 900); refrescar(); }
+};
+
+/* ---------- Simulador para la demostración (GitHub Pages) ---------- */
+const Simulador = {
+  alertas: [], id: 0, desconocidos: [], equipos: [], bloqueos: [], idB: 0,
+  protegidas: new Set(["192.168.1.1","192.168.1.10"]),
+  bloquear(ip, mac, motivo, responsable){
+    if (!ip && !mac) return {ok:false, mensaje:"Debe indicar una IP o una MAC válida."};
+    if (this.protegidas.has(ip)){
+      this.alertar("alta","Bloqueo omitido (equipo protegido)",`Se detectó una amenaza asociada a ${ip}, pero está en la lista de equipos que nunca se bloquean. Requiere revisión manual inmediata.`, ip);
+      return {ok:false, mensaje:`${ip} está protegido y no puede bloquearse.`};
+    }
+    if (this.bloqueos.some(b => b.ip === ip)) return {ok:false, mensaje:`${ip} ya está en cuarentena.`};
+    this.bloqueos.unshift({id: ++this.idB, ip, mac, motivo, responsable, creado: this.ahora(), firewall:"simulado", router: mac ? "simulado" : "no aplica"});
+    this.alertar("alta","Equipo bloqueado (cuarentena)",`${ip}${mac ? " (MAC " + mac + ")" : ""} quedó aislado. Motivo: ${motivo.slice(0,140).replace(/\.$/,"")}. Debe ser intervenido por el personal autorizado antes de liberarlo.`, ip);
+    return {ok:true, mensaje:`${ip} bloqueado.`};
+  },
+  iniciar(){
+    const base = [["Router / Puerta de enlace","192.168.1.1","router",true],["Servidor central","192.168.1.10","servidor",true],
+      ["Impresora central","192.168.1.20","impresora",false]];
+    const areas = ["Administración","Administración","Supervisión","Supervisión","Operaciones","Operaciones","Seguridad","Seguridad","Logística","Recepción"];
+    areas.forEach((a,i) => base.push([`PC-${String(i+1).padStart(2,"0")} ${a}`, `192.168.1.${101+i}`, "pc", false]));
+    this.equipos = base.map(([nombre, ip, tipo, critico]) => ({nombre, ip, tipo, critico, estado:"en_linea", latencia:3, puertos_riesgo:[]}));
+    this.alertar("baja","Sistema iniciado","Centinela Red comenzó la vigilancia de la red 192.168.1.0/24.","");
+    setTimeout(() => this.evento(), 2500);
+    setInterval(() => { this.equipos.forEach(e => { if (e.estado === "en_linea") e.latencia = +(1 + Math.random()*8).toFixed(1); });
+      if (Math.random() < .55) this.evento(); }, 7000);
+  },
+  ahora(){ const d = new Date(), z = n => String(n).padStart(2,"0");
+    return `${d.getFullYear()}-${z(d.getMonth()+1)}-${z(d.getDate())} ${z(d.getHours())}:${z(d.getMinutes())}:${z(d.getSeconds())}`; },
+  alertar(severidad, categoria, mensaje, origen){
+    this.alertas.unshift({id: ++this.id, severidad, categoria, mensaje, origen, creada: this.ahora(), repeticiones: 1, atendida: 0});
+  },
+  azar: a => a[Math.floor(Math.random()*a.length)],
+  evento(){
+    const eq = this.azar(this.equipos), tipo = this.azar(["caida","intruso","puerto","fuerza","arp","latencia","intruso","puerto"]);
+    if (tipo === "caida"){
+      if (eq.estado === "caido"){ eq.estado = "en_linea"; this.alertar("baja","Equipo recuperado",`${eq.nombre} (${eq.ip}) volvió a responder.`, eq.ip); }
+      else { eq.estado = "caido"; eq.latencia = null;
+        this.alertar(eq.critico ? "critica" : "media","Equipo sin respuesta",`${eq.nombre} (${eq.ip}) no responde desde hace 3 revisiones.`, eq.ip); }
+    } else if (tipo === "intruso"){
+      const mac = Array.from({length:6}, () => Math.floor(Math.random()*256).toString(16).padStart(2,"0")).join(":");
+      const ip = "192.168.1." + (150 + Math.floor(Math.random()*50));
+      this.desconocidos.unshift({ip, mac, ultima_vez: this.ahora()});
+      this.alertar("alta","Dispositivo desconocido en la red",`Se detectó un equipo no registrado con MAC ${mac} en ${ip}. Verifique si está autorizado; si no, desconéctelo.`, ip);
+      this.bloquear(ip, mac, "Dispositivo desconocido en la red.", "Automático (Centinela)");
+    } else if (tipo === "puerto"){
+      const [p, s, sev, m] = this.azar([[23,"Telnet","alta","acceso remoto sin cifrar"],[4444,"Puerto 4444","critica","puerto típico de puertas traseras"],
+        [5900,"VNC","alta","control remoto, a menudo sin cifrar"],[3306,"MySQL","alta","base de datos expuesta en la red"],[21,"FTP","media","transfiere credenciales sin cifrar"]]);
+      if (!eq.puertos_riesgo.includes(p)) eq.puertos_riesgo.push(p);
+      this.alertar(sev,"Puerto de riesgo abierto",`${eq.nombre} (${eq.ip}) tiene abierto el puerto ${p} (${s}): ${m}.`, eq.ip);
+      if (sev === "critica") this.bloquear(eq.ip, "", `Puerto ${p} abierto (${m}).`, "Automático (Centinela)");
+    } else if (tipo === "fuerza"){
+      const ip = this.azar(["45.155.205.233","185.220.101.47","192.168.1.187"]), u = this.azar(["administrador","admin","contabilidad"]);
+      this.alertar("critica","Posible ataque de fuerza bruta",`${5 + Math.floor(Math.random()*20)} intentos fallidos de inicio de sesión desde ${ip} en menos de 5 min (último usuario: ${u}). Cambie las contraseñas afectadas.`, ip);
+      this.bloquear(ip, "", "Posible ataque de fuerza bruta.", "Automático (Centinela)");
+    } else if (tipo === "arp"){
+      const ipA = "192.168.1." + (200 + Math.floor(Math.random()*40)), macA = Array.from({length:6}, () => Math.floor(Math.random()*256).toString(16).padStart(2,"0")).join(":");
+      this.alertar("critica","Posible suplantación ARP",`La dirección 192.168.1.1 (Puerta de enlace) ahora responde con la MAC ${macA}, que también usa ${ipA}. Posible ataque de intermediario (man-in-the-middle).`,"192.168.1.1");
+      this.bloquear(ipA, macA, "Posible suplantación ARP de la puerta de enlace.", "Automático (Centinela)");
+    } else if (eq.estado === "en_linea"){
+      eq.latencia = +(350 + Math.random()*500).toFixed(1);
+      this.alertar("media","Latencia elevada",`${eq.nombre} (${eq.ip}) responde lento: ${eq.latencia} ms.`, eq.ip);
+    }
+  },
+  async api(ruta, metodo, datos){
+    let m;
+    if (metodo === "POST" && (ruta.includes("bloquear") || ruta.includes("liberar"))){
+      if ((datos?.clave || "") !== "demo") return {ok:false, mensaje:"Clave de intervención incorrecta. (En la demo es: demo)"};
+      if (ruta.includes("bloquear")) return this.bloquear(datos.ip, (datos.mac || "").toLowerCase(), "Bloqueo manual: " + (datos.motivo || "sin motivo"), datos.responsable);
+      m = ruta.match(/bloqueos\/(\d+)\/liberar/);
+      const b = this.bloqueos.find(x => x.id == m[1]);
+      if (!b) return {ok:false, mensaje:"El bloqueo ya fue liberado."};
+      this.bloqueos = this.bloqueos.filter(x => x !== b);
+      this.alertar("baja","Equipo liberado de cuarentena",`${b.ip} fue liberado por ${datos.responsable}. Nota: ${datos.nota || "sin nota"}.`, b.ip);
+      return {ok:true, mensaje:`${b.ip} liberado.`};
+    }
+    if (metodo === "POST"){
+      if ((m = ruta.match(/alertas\/(\d+)\/atender/))) this.alertas.forEach(a => { if (a.id == m[1]) a.atendida = 1; });
+      else if (ruta.includes("atender-todas")) this.alertas.forEach(a => a.atendida = 1);
+      else if ((m = ruta.match(/dispositivos\/([0-9a-f:]+)\/autorizar/))){
+        this.desconocidos = this.desconocidos.filter(d => d.mac !== m[1]);
+        this.alertas.forEach(a => { if (a.mensaje.includes(m[1])) a.atendida = 1; });
+      }
+      return {ok:true};
+    }
+    if (ruta.startsWith("api/alertas")) return this.alertas.slice(0, 200);
+    const conteo = {critica:0, alta:0, media:0, baja:0}, peso = {critica:25, alta:10, media:4, baja:1};
+    this.alertas.filter(a => !a.atendida).forEach(a => conteo[a.severidad]++);
+    const puntaje = Math.min(100, Object.keys(conteo).reduce((s,k) => s + conteo[k]*peso[k], 0));
+    return {modo:"demo", empresa:"Casa Staff Terracota Chevron - El Tigre", subred:"192.168.1.0/24", ultimo_ciclo:this.ahora(),
+      puntaje, nivel: puntaje >= 60 ? "Crítico" : puntaje >= 30 ? "Elevado" : puntaje >= 10 ? "Moderado" : "Bajo",
+      conteo, desconocidos:this.desconocidos, bloqueos:this.bloqueos,
+      equipos:this.equipos.map(e => Object.assign({}, e, {bloqueado: this.bloqueos.some(b => b.ip === e.ip)})),
+      cuarentena:{activa:true, automatica:true, modo_prueba:false, clave_configurada:true},
+      en_linea:this.equipos.filter(e => e.estado === "en_linea").length, total:this.equipos.length};
+  }
+};
+
+refrescar();
+setInterval(refrescar, 5000);
+</script>
+</body>
+</html>
